@@ -35,6 +35,10 @@ public enum Usenet {
         store = session.getStore(new URLName(props.getProperty("nntp.host")));
         store.connect();
         root = store.getDefaultFolder();
+        LOG.info("store is...\t" + store.toString());
+        LOG.info("root is..\t" + root.toString());
+        LOG.info("root size is..\t" + root.getFullName());
+        LOG.info("root.listSubscribed are..\t" + root.listSubscribed().toString());
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
