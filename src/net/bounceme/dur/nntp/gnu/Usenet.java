@@ -38,7 +38,7 @@ public enum Usenet {
         LOG.info("store is...\t" + store.toString());
         LOG.info("root is..\t" + root.toString());
         LOG.info("root size is..\t" + root.getFullName());
-        LOG.info("root.listSubscribed are..\t" + root.listSubscribed().toString());
+        LOG.info("root.listSubscribed are..\t" + root.listSubscribed());
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
@@ -59,6 +59,7 @@ public enum Usenet {
 
     private void setFolders(List<Folder> folders) {
         this.folders = folders;
+        LOG.info("folders are \n" + folders);
     }
 
     public Message getMessage(Newsgroup newsgroup, Article article) throws MessagingException {
