@@ -1,5 +1,7 @@
 package net.bounceme.dur.nntp.gnu;
 
+//hmm, can I just checkout, commit and push?
+
 import java.util.logging.Logger;
 
 public class Main {
