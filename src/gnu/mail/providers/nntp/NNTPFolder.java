@@ -63,9 +63,9 @@ public final class NNTPFolder
         extends Folder {
 
     String name;
-    int first = -1;
-    int last = -1;
-    int count = -1;
+    //int first = -1;
+    //int last = -1;
+    //int count = -1;
     boolean open;
     private GroupResponse grpResp;
     Map articleCache; // cache of article-number to NNTPMessage
@@ -143,9 +143,9 @@ public final class NNTPFolder
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 grpResp = ns.connection.group(name);
-                count = grpResp.count;
-                first = grpResp.first;
-                last = grpResp.last;
+                //count = grpResp.count;
+                //first = grpResp.first;
+                //last = grpResp.last;
             }
 
             articleCache = new HashMap(1024); // TODO make configurable
@@ -186,9 +186,9 @@ public final class NNTPFolder
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 grpResp = ns.connection.group(name);
-                count = grpResp.count;
-                first = grpResp.first;
-                last = grpResp.last;
+                //  count = grpResp.count;
+                //first = grpResp.first;
+                //last = grpResp.last;
             }
             return true;
         } catch (NNTPException e) {
@@ -211,16 +211,17 @@ public final class NNTPFolder
             NNTPStore ns = (NNTPStore) store;
             boolean hasNew = false;
             synchronized (ns.connection) {
-                GroupResponse response = ns.connection.group(name);
-                if (response.last > grpResp.last) {
+                GroupResponse newGroupResponse = ns.connection.group(name);
+                if (newGroupResponse.last > grpResp.last) {
                     hasNew = true;
                 }
-                count = response.count;
-                first = response.first;
-                last = response.last;
-                grpResp.count = response.count;   //gr = response?
-                grpResp.first = response.first;
-                grpResp.last = response.last;
+                //         count = response.count;
+                //       first = response.first;
+                //     last = response.last;
+                //           grpResp.count = newGroupResponse.count;   //gr = response?
+                //          grpResp.first = newGroupResponse.first;
+                //         grpResp.last = newGroupResponse.last;
+                grpResp = newGroupResponse;
             }
             return hasNew;
         } catch (NNTPException e) {
@@ -239,7 +240,7 @@ public final class NNTPFolder
      */
     public int getMessageCount()
             throws MessagingException {
-        return count;
+        return grpResp.count;
     }
 
     /**
@@ -265,11 +266,11 @@ public final class NNTPFolder
             synchronized (ns.connection) {
                 // Ensure group selected
                 grpResp = ns.connection.group(name);
-                first = grpResp.first;
-                last = grpResp.last;
-                count = grpResp.count;
+                //      first = grpResp.first;
+                //    last = grpResp.last;
+                //  count = grpResp.count;
                 // Get article
-                m = getMessageImpl(msgnum - 1 + first);
+                m = getMessageImpl(msgnum - 1 + grpResp.first);
                 // Cache store
                 articleCache.put(key, m);
                 return m;
@@ -314,14 +315,14 @@ public final class NNTPFolder
             try {
                 // Ensure group selected
                 grpResp = ns.connection.group(name);
-                first = grpResp.first;
-                last = grpResp.last;
-                count = grpResp.count;
+                //              first = grpResp.first;
+                //            last = grpResp.last;
+                //          count = grpResp.count;
                 // Get Message-IDs for all article numbers
                 StringBuffer rb = new StringBuffer();
-                rb.append(Integer.toString(first));
+                rb.append(Integer.toString(grpResp.first));
                 rb.append('-');
-                rb.append(Integer.toString(last));
+                rb.append(Integer.toString(grpResp.last));
                 HeaderIterator i = ns.connection.xhdr("Message-ID",
                         rb.toString());
                 while (i.hasNext()) {
@@ -341,7 +342,7 @@ public final class NNTPFolder
             } catch (NNTPException e) {
                 // Perhaps the server does not understand XHDR.
                 // We'll do it the slow way.
-                for (int i = first; i <= last; i++) {
+                for (int i = grpResp.first; i <= grpResp.last; i++) {
                     Integer key = new Integer(i);
                     // Cache lookup
                     Message m = (NNTPMessage) articleCache.get(key);
