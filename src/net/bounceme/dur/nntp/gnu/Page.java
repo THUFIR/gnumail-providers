@@ -29,7 +29,7 @@ public class Page {
         this.pmd = pmd;
         this.m = m;
         for (Message message : m) {
-            LOG.info(message.getSubject());
+            LOG.info(message.getSubject());     
         }
     }
 
