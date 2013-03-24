@@ -50,15 +50,19 @@ public class Page {
     }
 
     private void print() throws Exception {
-        Object o;
+
         for (int i = 1; i < 5; i++) {
             Message msg = m.get(i);
             Enumeration headers = msg.getAllHeaders();
             while (headers.hasMoreElements()) {
-                o = headers.nextElement();
+                Object o = headers.nextElement();
                 Header header = (Header) o;
                 if ("Xref".equals(header.getName())) {
-                    LOG.info("\n" + header.getName() + "\n" + header.getValue());
+                    String s = header.getValue();
+                    int foo = s.lastIndexOf("c", 1);
+                    LOG.severe("lastIndexOf  " + foo);
+                    String bar = s.substring(foo);
+                    LOG.info("\n" + header.getName() + "\n" + bar);
                 }
             }
             LOG.info(msg.getSubject());
