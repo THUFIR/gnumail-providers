@@ -30,22 +30,22 @@ public enum Usenet {
     public void connect() throws Exception {
         LOG.fine("Usenet.connect..");
         Session session = Session.getDefaultInstance(props);
-        session.setDebug(true);
+        session.setDebug(false);
         store = session.getStore(new URLName(props.getProperty("nntp.host")));
         store.connect();
         root = store.getDefaultFolder();
-        LOG.info("store is...\t" + store.toString());
-        LOG.info("root is..\t" + root.toString());
-        LOG.info("root size is..\t" + root.getFullName());
-        LOG.info("root.listSubscribed are..\t" + root.listSubscribed().toString());
+        LOG.fine("store is...\t" + store.toString());
+        LOG.fine("root is..\t" + root.toString());
+        LOG.fine("root size is..\t" + root.getFullName());
+        LOG.fine("root.listSubscribed are..\t" + root.listSubscribed().toString());
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
     public Page getPage(PMD pmd) throws Exception {
-        LOG.info("fetching.." + pmd.getGmd().getGroup());
+        LOG.fine("fetching.." + pmd.getGmd().getGroup());
         folder = root.getFolder(pmd.getGmd().getGroup());
         folder.open(Folder.READ_ONLY);
-        LOG.info("..fetched " + folder);
+        LOG.fine("..fetched " + folder);
         List<Message> messages = Arrays.asList(folder.getMessages());
         messages = Collections.unmodifiableList(messages);
         Page page = new Page(pmd,messages);

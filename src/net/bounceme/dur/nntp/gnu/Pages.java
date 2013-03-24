@@ -9,7 +9,7 @@ public class Pages {
     Usenet u = Usenet.INSTANCE;
 
     public Pages() throws Exception {
-        LOG.info("in constructor");
+        LOG.fine("in constructor");
         PMD pmd = new PMD(new GMD("comp.lang.java.help")); //dummy
         Page page = u.getPage(pmd);
         LOG.info(page.toString());

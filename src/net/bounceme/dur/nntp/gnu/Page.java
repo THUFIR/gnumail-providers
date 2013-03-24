@@ -59,14 +59,12 @@ public class Page {
                 Header header = (Header) o;
                 if ("Xref".equals(header.getName())) {
                     String s = header.getValue();
-                    int foo = s.lastIndexOf("c", 1);
-                    LOG.severe("lastIndexOf  " + foo);
-                    String bar = s.substring(foo);
-                    LOG.info("\n" + header.getName() + "\n" + bar);
+                    String t = s.substring(2);
+                    LOG.info("\n" + header.getName() + "\n" + t);
                 }
             }
-            LOG.info(msg.getSubject());
-            LOG.warning("\n\n\n**********************\n\n\n");
+            LOG.fine(msg.getSubject());
+            LOG.fine("\n\n\n**********************\n\n\n");
         }
     }
 }

@@ -18,7 +18,7 @@ public class PropertiesReader {
         } catch (IOException ex) {
             Logger.getLogger(PropertiesReader.class.getName()).log(Level.SEVERE, null, ex);
         }
-        LOG.info(props.toString());
+        LOG.fine(props.toString());
         return props;
     }
 }
