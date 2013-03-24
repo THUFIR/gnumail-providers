@@ -3,6 +3,8 @@ package net.bounceme.dur.nntp.gnu;
 import gnu.mail.providers.nntp.GMD;
 import java.util.logging.Logger;
 
+//looks ok
+
 public class Pages {
 
     private final static Logger LOG = Logger.getLogger(Pages.class.getName());
