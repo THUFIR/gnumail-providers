@@ -58,9 +58,11 @@ public class Page {
                 Object o = headers.nextElement();
                 Header header = (Header) o;
                 if ("Xref".equals(header.getName())) {
-                    String s = header.getValue();
-                    String t = s.substring(2);
-                    LOG.info("\n" + header.getName() + "\n" + t);
+                    String headerString = header.getValue();
+                    int index = headerString.indexOf(":");
+                    String subString = headerString.substring(index+1);
+                    int xref = Integer.parseInt(subString);
+                    LOG.info(Integer.toString(xref));
                 }
             }
             LOG.fine(msg.getSubject());
