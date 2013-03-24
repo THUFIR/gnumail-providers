@@ -1,12 +1,13 @@
 package net.bounceme.dur.nntp.gnu;
 
-import gnu.mail.providers.nntp.GMD;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.*;
 import javax.mail.search.MessageIDTerm;
 import javax.mail.search.SearchTerm;
+
+//trim, trim, trim
 
 public enum Usenet {
 
