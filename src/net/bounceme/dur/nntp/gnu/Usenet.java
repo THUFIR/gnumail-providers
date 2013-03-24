@@ -1,5 +1,6 @@
 package net.bounceme.dur.nntp.gnu;
 
+import gnu.mail.providers.nntp.GMD;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
