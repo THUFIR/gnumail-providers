@@ -5,40 +5,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 
 public class Page {
 
     private final static Logger LOG = Logger.getLogger(Page.class.getName());
     private List<Message> m = new ArrayList<>();
     private PMD pmd = new PMD();
-    Usenet u = Usenet.INSTANCE;
 
     public Page() throws Exception {
         GMD gmd = new GMD(getNewsgroup());
         pmd = new PMD(gmd);
-        init();
     }
 
     Page(GMD gmd) throws Exception {
         pmd = new PMD(gmd);
-        init();
     }
 
     Page(PMD pmd) throws Exception {
         this.pmd = pmd;
-        init();
     }
 
-    private void init() throws Exception {
-        m = u.getMessages(pmd);
-    }
-
-    public List<Message> getMessages() throws MessagingException {
+    Page(PMD pmd, List<Message> m) throws Exception {
+        this.pmd = pmd;
+        this.m = m;
         for (Message message : m) {
             LOG.info(message.getSubject());
         }
-        return m;
     }
 
     public String getNewsgroup() {

@@ -4,11 +4,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.*;
-import javax.mail.search.MessageIDTerm;
-import javax.mail.search.SearchTerm;
 
 //trim, trim, trim
-
 public enum Usenet {
 
     INSTANCE;
@@ -44,13 +41,15 @@ public enum Usenet {
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
-    public List<Message> getMessages(PMD pmd) throws Exception {
+    public Page getPage(PMD pmd) throws Exception {
         LOG.info("fetching.." + pmd.getGmd().getGroup());
         folder = root.getFolder(pmd.getGmd().getGroup());
         folder.open(Folder.READ_ONLY);
-        List<Message> messages = Arrays.asList(folder.getMessages());
         LOG.info("..fetched " + folder);
-        return Collections.unmodifiableList(messages);
+        List<Message> messages = Arrays.asList(folder.getMessages());
+        messages = Collections.unmodifiableList(messages);
+        Page page = new Page(pmd,messages);
+        return page;
     }
 
     public List<Folder> getFolders() {
@@ -60,21 +59,5 @@ public enum Usenet {
 
     private void setFolders(List<Folder> folders) {
         this.folders = folders;
-    }
-
-    private Message getMessage(Newsgroup newsgroup, Article article) throws MessagingException {
-        LOG.fine("\n\ntrying.." + newsgroup + article);
-        String id = article.getMessageId();
-        Message message = null;
-        folder = root.getFolder(newsgroup.getNewsgroup());
-        folder.open(Folder.READ_ONLY);
-        SearchTerm st = new MessageIDTerm(id);
-        List<Message> messages = Arrays.asList(folder.search(st));
-        LOG.severe(messages.toString());
-        if (!messages.isEmpty()) {
-            message = messages.get(0);
-        }
-        LOG.info(message.getSubject());
-        return message;
     }
 }
