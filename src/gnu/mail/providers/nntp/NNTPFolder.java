@@ -1,29 +1,31 @@
 /*
  * NNTPFolder.java
  * Copyright(C) 2002 Chris Burdess <dog@gnu.org>
- * 
+ *
  * This file is part of GNU JavaMail, a library.
- * 
+ *
  * GNU JavaMail is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  *(at your option) any later version.
- * 
+ *
  * GNU JavaMail is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ *
  * As a special exception, if you link this library with other files to
  * produce an executable, this library does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * This exception does not however invalidate any other reasons why the
  * executable file might be covered by the GNU General Public License.
  */
+
+//starting patch
 
 package gnu.mail.providers.nntp;
 
@@ -70,7 +72,7 @@ public final class NNTPFolder
   boolean open;
 
   Map articleCache; // cache of article-number to NNTPMessage
-  
+
   NNTPFolder(NNTPStore store, String name)
     {
       super(store);
@@ -103,7 +105,7 @@ public final class NNTPFolder
       NNTPStore ns = (NNTPStore) store;
       return ns.root;
     }
-  
+
   /**
    * Returns the type of this folder.
    * This folder type only holds messages.
@@ -192,12 +194,12 @@ public final class NNTPFolder
         {
           throw new IllegalStateException();
         }
-      
+
       articleCache = null;
       open = false;
       notifyConnectionListeners(ConnectionEvent.CLOSED);
     }
-  
+
   /**
    * Indicates whether the newsgroup is present on the server.
    */
@@ -272,7 +274,7 @@ public final class NNTPFolder
           throw new MessagingException(e.getMessage(), e);
         }
     }
-  
+
   /**
    * Returns the number of articles in this newsgroup.
    */
@@ -294,7 +296,7 @@ public final class NNTPFolder
         {
           throw new IllegalStateException();
         }
-      
+
       // Cache lookup
       Integer key = new Integer(msgnum);
       NNTPMessage m = (NNTPMessage) articleCache.get(key);
@@ -302,7 +304,7 @@ public final class NNTPFolder
         {
           return m;
         }
-      
+
       try
         {
           NNTPStore ns = (NNTPStore) store;
@@ -406,7 +408,7 @@ public final class NNTPFolder
                   Message m = (NNTPMessage) articleCache.get(key);
                   if (m == null)
                     {
-                      try 
+                      try
                         {
                           m = getMessageImpl(i);
                           // Cache store
