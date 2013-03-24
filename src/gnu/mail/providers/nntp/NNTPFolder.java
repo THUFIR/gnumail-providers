@@ -63,29 +63,14 @@ import gnu.inet.nntp.NNTPException;
 public final class NNTPFolder
         extends Folder {
 
-    //drop GroupResponse as a class field
-    //String name;
     boolean open;
-    private GroupResponse grpResp;
-    private GroupMetaData gmd = new GroupMetaData();
+    //private GroupResponse grpResp;
+    private GMD gmd = new GMD();
     Map articleCache; // cache of article-number to NNTPMessage
-
-    NNTPFolder(NNTPStore store, Group name) {
-        super(store);
-        //this.name = name.getName();
-        gmd = new GroupMetaData(name.getName());
-    }
-
-    NNTPFolder(NNTPStore ns, GroupResponse groupResponse) {
-        super(ns);
-        grpResp = groupResponse;
-        gmd = new GroupMetaData(grpResp.group);
-    }
 
     NNTPFolder(NNTPStore ns, String name) {
         super(ns);
-        //this.name = name;
-        gmd = new GroupMetaData(name);
+        gmd = new GMD(name);
     }
 
     /**
@@ -152,13 +137,12 @@ public final class NNTPFolder
         if (open) {
             throw new IllegalStateException();
         }
+        GroupResponse grpResp;
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 grpResp = ns.connection.group(gmd.getGroup());
-                //count = grpResp.count;
-                //first = grpResp.first;
-                //last = grpResp.last;
+                gmd = new GMD(grpResp);
             }
 
             articleCache = new HashMap(1024); // TODO make configurable
@@ -185,7 +169,7 @@ public final class NNTPFolder
         }
 
         articleCache = null;
-        grpResp = null;
+        gmd = null;
         open = false;
         notifyConnectionListeners(ConnectionEvent.CLOSED);
     }
@@ -195,6 +179,7 @@ public final class NNTPFolder
      */
     public boolean exists()
             throws MessagingException {
+        GroupResponse grpResp = null;
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
@@ -220,6 +205,7 @@ public final class NNTPFolder
      */
     public boolean hasNewMessages()
             throws MessagingException {
+        GroupResponse grpResp = null;
         try {
             NNTPStore ns = (NNTPStore) store;
             boolean hasNew = false;
@@ -253,7 +239,7 @@ public final class NNTPFolder
      */
     public int getMessageCount()
             throws MessagingException {
-        return grpResp.count;
+        return gmd.getCount();
     }
 
     /**
@@ -273,6 +259,7 @@ public final class NNTPFolder
         if (m != null) {
             return m;
         }
+        GroupResponse grpResp = null;
 
         try {
             NNTPStore ns = (NNTPStore) store;
@@ -324,13 +311,12 @@ public final class NNTPFolder
             throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
         List acc = new LinkedList();
+        GroupResponse grpResp = null;
         synchronized (ns.connection) {
             try {
                 // Ensure group selected
                 grpResp = ns.connection.group(gmd.getGroup());
-                //              first = grpResp.first;
-                //            last = grpResp.last;
-                //          count = grpResp.count;
+                gmd = new GMD(grpResp);
                 // Get Message-IDs for all article numbers
                 StringBuffer rb = new StringBuffer();
                 rb.append(Integer.toString(grpResp.first));
