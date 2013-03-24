@@ -62,8 +62,6 @@ import gnu.inet.nntp.NNTPException;
  */
 public final class NNTPFolder extends Folder {
 
-    //boolean open;
-    //private GroupResponse grpResp;
     private GMD gmd = new GMD();
     Map articleCache; // cache of article-number to NNTPMessage
 
@@ -136,12 +134,12 @@ public final class NNTPFolder extends Folder {
         if (gmd.isOpen()) {
             throw new IllegalStateException();
         }
-        GroupResponse grpResp;
+        GroupResponse groupResponse;
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
-                grpResp = ns.connection.group(gmd.getGroup());
-                gmd = new GMD(grpResp);
+                groupResponse = ns.connection.group(gmd.getGroup());
+                gmd = new GMD(groupResponse);
             }
 
             articleCache = new HashMap(1024); // TODO make configurable
@@ -168,23 +166,21 @@ public final class NNTPFolder extends Folder {
         }
 
         articleCache = null;
-        gmd = null;
+        gmd = new GMD();
+        gmd.setOpen(false);
         notifyConnectionListeners(ConnectionEvent.CLOSED);
     }
 
     /**
      * Indicates whether the newsgroup is present on the server.
      */
-    public boolean exists()
-            throws MessagingException {
+    public boolean exists() throws MessagingException {
         GroupResponse grpResp = null;
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 grpResp = ns.connection.group(gmd.getGroup());
-                //  count = grpResp.count;
-                //first = grpResp.first;
-                //last = grpResp.last;
+                gmd = new GMD(grpResp);
             }
             return true;
         } catch (NNTPException e) {
@@ -203,22 +199,16 @@ public final class NNTPFolder extends Folder {
      */
     public boolean hasNewMessages()
             throws MessagingException {
-        GroupResponse grpResp = null;
         try {
             NNTPStore ns = (NNTPStore) store;
             boolean hasNew = false;
             synchronized (ns.connection) {
-                GroupResponse newGroupResponse = ns.connection.group(gmd.getGroup());
-                if (newGroupResponse.last > grpResp.last) {
+                GroupResponse groupResponse = ns.connection.group(gmd.getGroup());
+                GMD newGroupMetaData = new GMD(groupResponse);
+                if (newGroupMetaData.getLast() > gmd.getLast()) {
                     hasNew = true;
                 }
-                //         count = response.count;
-                //       first = response.first;
-                //     last = response.last;
-                //           grpResp.count = newGroupResponse.count;   //gr = response?
-                //          grpResp.first = newGroupResponse.first;
-                //         grpResp.last = newGroupResponse.last;
-                grpResp = newGroupResponse;
+                gmd = new GMD(groupResponse);
             }
             return hasNew;
         } catch (NNTPException e) {
@@ -264,11 +254,9 @@ public final class NNTPFolder extends Folder {
             synchronized (ns.connection) {
                 // Ensure group selected
                 grpResp = ns.connection.group(gmd.getGroup());
-                //      first = grpResp.first;
-                //    last = grpResp.last;
-                //  count = grpResp.count;
+                gmd = new GMD(grpResp);
                 // Get article
-                m = getMessageImpl(msgnum - 1 + grpResp.first);
+                m = getMessageImpl(msgnum - 1 + gmd.getFirst());
                 // Cache store
                 articleCache.put(key, m);
                 return m;
@@ -377,8 +365,7 @@ public final class NNTPFolder extends Folder {
     /**
      * Prefetch.
      */
-    public void fetch(Message[] msgs, FetchProfile fp)
-            throws MessagingException {
+    public void fetch(Message[] msgs, FetchProfile fp) throws MessagingException {
         boolean head = fp.contains(FetchProfile.Item.ENVELOPE);
         head = head || (fp.getHeaderNames().length > 0);
         boolean body = fp.contains(FetchProfile.Item.CONTENT_INFO);
@@ -464,8 +451,7 @@ public final class NNTPFolder extends Folder {
      * Subscribes or unsubscribes to this newsgroup.
      * This uses the newsrc mechanism associated with this folder's store.
      */
-    public void setSubscribed(boolean flag)
-            throws MessagingException {
+    public void setSubscribed(boolean flag) throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
         ns.newsrc.setSubscribed(gmd.getGroup(), flag);
     }
