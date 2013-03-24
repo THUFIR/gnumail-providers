@@ -47,6 +47,7 @@ import javax.mail.MethodNotSupportedException;
 import javax.mail.event.ConnectionEvent;
 
 import gnu.inet.nntp.ArticleResponse;
+import gnu.inet.nntp.Group;
 import gnu.inet.nntp.GroupResponse;
 import gnu.inet.nntp.HeaderEntry;
 import gnu.inet.nntp.HeaderIterator;
@@ -63,15 +64,22 @@ public final class NNTPFolder
         extends Folder {
 
     String name;
-    //int first = -1;
-    //int last = -1;
-    //int count = -1;
     boolean open;
     private GroupResponse grpResp;
     Map articleCache; // cache of article-number to NNTPMessage
 
-    NNTPFolder(NNTPStore store, String name) {
+    NNTPFolder(NNTPStore store, Group name) {
         super(store);
+        this.name = name.getName();
+    }
+
+    NNTPFolder(NNTPStore ns, GroupResponse groupResponse) {
+        super(ns);
+        grpResp = groupResponse;
+    }
+
+    NNTPFolder(NNTPStore ns, String name) {
+        super(ns);
         this.name = name;
     }
 
