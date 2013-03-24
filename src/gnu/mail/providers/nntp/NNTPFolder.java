@@ -64,39 +64,42 @@ public final class NNTPFolder
         extends Folder {
 
     //drop GroupResponse as a class field
-
-    String name;
+    //String name;
     boolean open;
     private GroupResponse grpResp;
+    private GroupMetaData gmd = new GroupMetaData();
     Map articleCache; // cache of article-number to NNTPMessage
 
     NNTPFolder(NNTPStore store, Group name) {
         super(store);
-        this.name = name.getName();
+        //this.name = name.getName();
+        gmd = new GroupMetaData(name.getName());
     }
 
     NNTPFolder(NNTPStore ns, GroupResponse groupResponse) {
         super(ns);
         grpResp = groupResponse;
+        gmd = new GroupMetaData(grpResp.group);
     }
 
     NNTPFolder(NNTPStore ns, String name) {
         super(ns);
-        this.name = name;
+        //this.name = name;
+        gmd = new GroupMetaData(grpResp.group);
     }
 
     /**
      * Returns the name of the newsgroup, e.g. <code>alt.test</code>.
      */
     public String getName() {
-        return name;
+        return gmd.getGroup();
     }
 
     /**
      * @see #getName
      */
     public String getFullName() {
-        return name;
+        return gmd.getGroup();
     }
 
     /**
@@ -152,7 +155,7 @@ public final class NNTPFolder
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
-                grpResp = ns.connection.group(name);
+                grpResp = ns.connection.group(gmd.getGroup());
                 //count = grpResp.count;
                 //first = grpResp.first;
                 //last = grpResp.last;
@@ -195,7 +198,7 @@ public final class NNTPFolder
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
-                grpResp = ns.connection.group(name);
+                grpResp = ns.connection.group(gmd.getGroup());
                 //  count = grpResp.count;
                 //first = grpResp.first;
                 //last = grpResp.last;
@@ -221,7 +224,7 @@ public final class NNTPFolder
             NNTPStore ns = (NNTPStore) store;
             boolean hasNew = false;
             synchronized (ns.connection) {
-                GroupResponse newGroupResponse = ns.connection.group(name);
+                GroupResponse newGroupResponse = ns.connection.group(gmd.getGroup());
                 if (newGroupResponse.last > grpResp.last) {
                     hasNew = true;
                 }
@@ -275,7 +278,7 @@ public final class NNTPFolder
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 // Ensure group selected
-                grpResp = ns.connection.group(name);
+                grpResp = ns.connection.group(gmd.getGroup());
                 //      first = grpResp.first;
                 //    last = grpResp.last;
                 //  count = grpResp.count;
@@ -324,7 +327,7 @@ public final class NNTPFolder
         synchronized (ns.connection) {
             try {
                 // Ensure group selected
-                grpResp = ns.connection.group(name);
+                grpResp = ns.connection.group(gmd.getGroup());
                 //              first = grpResp.first;
                 //            last = grpResp.last;
                 //          count = grpResp.count;
@@ -470,7 +473,7 @@ public final class NNTPFolder
      */
     public boolean isSubscribed() {
         NNTPStore ns = (NNTPStore) store;
-        return ns.newsrc.isSubscribed(name);
+        return ns.newsrc.isSubscribed(gmd.getGroup());
     }
 
     /**
@@ -480,17 +483,17 @@ public final class NNTPFolder
     public void setSubscribed(boolean flag)
             throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
-        ns.newsrc.setSubscribed(name, flag);
+        ns.newsrc.setSubscribed(gmd.getGroup(), flag);
     }
 
     boolean isSeen(int articleNumber) {
         NNTPStore ns = (NNTPStore) store;
-        return ns.newsrc.isSeen(name, articleNumber);
+        return ns.newsrc.isSeen(gmd.getGroup(), articleNumber);
     }
 
     void setSeen(int articleNumber, boolean flag) {
         NNTPStore ns = (NNTPStore) store;
-        ns.newsrc.setSeen(name, articleNumber, flag);
+        ns.newsrc.setSeen(gmd.getGroup(), articleNumber, flag);
     }
 
     // -- Stuff we can't do --
