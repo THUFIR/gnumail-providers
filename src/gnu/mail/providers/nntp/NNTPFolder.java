@@ -547,7 +547,6 @@ public final class NNTPFolder
         throw new IllegalWriteException();
     }
 
-    
     /**
      * NNTP servers are read-only.
      */
