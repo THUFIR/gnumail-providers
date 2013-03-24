@@ -2,3 +2,4 @@ Manifest-Version: 1.0
 Implementation-Version: 1.3
 Implementation-Vendor: The Free Software Foundation, Inc.
 Implementation-URL: http://www.gnu.org/software/classpathx/javamail/
+
