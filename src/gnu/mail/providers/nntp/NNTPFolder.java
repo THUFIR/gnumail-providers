@@ -85,7 +85,7 @@ public final class NNTPFolder
     NNTPFolder(NNTPStore ns, String name) {
         super(ns);
         //this.name = name;
-        gmd = new GroupMetaData(grpResp.group);
+        gmd = new GroupMetaData(name);
     }
 
     /**
