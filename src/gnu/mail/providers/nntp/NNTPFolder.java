@@ -63,7 +63,7 @@ import gnu.inet.nntp.NNTPException;
 public final class NNTPFolder
         extends Folder {
 
-    //too much here
+    //drop GroupResponse as a class field
 
     String name;
     boolean open;
