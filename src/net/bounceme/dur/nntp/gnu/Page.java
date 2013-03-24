@@ -14,17 +14,24 @@ public class Page {
     private PMD pmd = new PMD();
     Usenet u = Usenet.INSTANCE;
 
-    public Page() {
+    public Page() throws Exception {
         GMD gmd = new GMD(getNewsgroup());
         pmd = new PMD(gmd);
+        init();
     }
 
-    Page(GMD gmd) {
+    Page(GMD gmd) throws Exception {
         pmd = new PMD(gmd);
+        init();
+    }
+
+    Page(PMD pmd) throws Exception {
+        this.pmd = pmd;
+        init();
     }
 
     private void init() throws Exception {
-        m = u.getMessages(this);
+        m = u.getMessages(pmd);
     }
 
     public List<Message> getMessages() throws MessagingException {
@@ -40,5 +47,13 @@ public class Page {
 
     public String toString() {
         return "fuck";
+    }
+
+    public PMD getPmd() {
+        return pmd;
+    }
+
+    public void setPmd(PMD pmd) {
+        this.pmd = pmd;
     }
 }

@@ -44,10 +44,9 @@ public enum Usenet {
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
-    public List<Message> getMessages(Page page) throws Exception {
-        Newsgroup newsgroup = new Newsgroup(page);
-        LOG.info("fetching.." + newsgroup);
-        folder = root.getFolder(newsgroup.getNewsgroup());
+    public List<Message> getMessages(PMD pmd) throws Exception {
+        LOG.info("fetching.." + pmd.getGmd().getGroup());
+        folder = root.getFolder(pmd.getGmd().getGroup());
         folder.open(Folder.READ_ONLY);
         List<Message> messages = Arrays.asList(folder.getMessages());
         LOG.info("..fetched " + folder);
@@ -63,7 +62,7 @@ public enum Usenet {
         this.folders = folders;
     }
 
-    public Message getMessage(Newsgroup newsgroup, Article article) throws MessagingException {
+    private Message getMessage(Newsgroup newsgroup, Article article) throws MessagingException {
         LOG.fine("\n\ntrying.." + newsgroup + article);
         String id = article.getMessageId();
         Message message = null;
