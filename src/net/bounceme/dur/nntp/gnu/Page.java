@@ -2,8 +2,10 @@ package net.bounceme.dur.nntp.gnu;
 
 import gnu.mail.providers.nntp.GMD;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
+import javax.mail.Header;
 import javax.mail.Message;
 
 public class Page {
@@ -28,9 +30,7 @@ public class Page {
     Page(PMD pmd, List<Message> m) throws Exception {
         this.pmd = pmd;
         this.m = m;
-        for (Message message : m) {
-            LOG.info(message.getSubject());
-        }
+        print();
     }
 
     public String getNewsgroup() {
@@ -47,5 +47,22 @@ public class Page {
 
     public void setPmd(PMD pmd) {
         this.pmd = pmd;
+    }
+
+    private void print() throws Exception {
+        Object o;
+        for (int i = 1; i < 5; i++) {
+            Message msg = m.get(i);
+            Enumeration headers = msg.getAllHeaders();
+            while (headers.hasMoreElements()) {
+                o = headers.nextElement();
+                Header header = (Header) o;
+                if ("Xref".equals(header.getName())) {
+                    LOG.info("\n" + header.getName() + "\n" + header.getValue());
+                }
+            }
+            LOG.info(msg.getSubject());
+            LOG.warning("\n\n\n**********************\n\n\n");
+        }
     }
 }
