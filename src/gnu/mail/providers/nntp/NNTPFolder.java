@@ -60,10 +60,9 @@ import gnu.inet.nntp.NNTPException;
  * @author <a href='mailto:dog@gnu.org'>Chris Burdess</a>
  * @version 2.0
  */
-public final class NNTPFolder
-        extends Folder {
+public final class NNTPFolder extends Folder {
 
-    boolean open;
+    //boolean open;
     //private GroupResponse grpResp;
     private GMD gmd = new GMD();
     Map articleCache; // cache of article-number to NNTPMessage
@@ -107,7 +106,7 @@ public final class NNTPFolder
     }
 
     public boolean isOpen() {
-        return open;
+        return gmd.isOpen();
     }
 
     /**
@@ -134,7 +133,7 @@ public final class NNTPFolder
             throws MessagingException {
         // NB this should probably throw an exception if READ_WRITE is
         // specified, but this tends to cause problems with existing clients.
-        if (open) {
+        if (gmd.isOpen()) {
             throw new IllegalStateException();
         }
         GroupResponse grpResp;
@@ -146,7 +145,7 @@ public final class NNTPFolder
             }
 
             articleCache = new HashMap(1024); // TODO make configurable
-            open = true;
+            gmd.setOpen(true);
             notifyConnectionListeners(ConnectionEvent.OPENED);
         } catch (NNTPException e) {
             if (e.getResponse().getStatus() == NNTPConstants.NO_SUCH_GROUP) {
@@ -164,13 +163,12 @@ public final class NNTPFolder
      */
     public void close(boolean expunge)
             throws MessagingException {
-        if (!open) {
+        if (!gmd.isOpen()) {
             throw new IllegalStateException();
         }
 
         articleCache = null;
         gmd = null;
-        open = false;
         notifyConnectionListeners(ConnectionEvent.CLOSED);
     }
 
@@ -249,7 +247,7 @@ public final class NNTPFolder
      */
     public Message getMessage(int msgnum)
             throws MessagingException {
-        if (!open) {
+        if (!gmd.isOpen()) {
             throw new IllegalStateException();
         }
 
