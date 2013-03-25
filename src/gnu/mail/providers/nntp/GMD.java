@@ -8,7 +8,7 @@ public class GMD {
     private int count = 0;
     private int first = 0;
     private int last = 0;
-    private boolean isOpen = false;
+    private boolean open = false;
 
     public GMD() {
     }
@@ -54,10 +54,14 @@ public class GMD {
     }
 
     public boolean isOpen() {
-        return isOpen;
+        return open;
     }
 
-    public void setOpen(boolean isOpen) {
-        this.isOpen = isOpen;
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    public String toString() {
+        return "isOpen\t\t" + open;
     }
 }

@@ -1,20 +1,55 @@
 package net.bounceme.dur.nntp.gnu;
 
 import gnu.mail.providers.nntp.GMD;
+import java.util.logging.Logger;
 
 public class PMD {
 
+    private static final Logger LOG = Logger.getLogger(PMD.class.getName());
     private GMD gmd = new GMD();
-    private int cursor = 0;
-    private int min = 0;
-    private int max = 0;
-    private int size = 5;
+    private int pageStart = 0;
+    private int pageEnd = 0;
+    private int rowsPerPage = 5;
+    private boolean lastPage = false;
 
     public PMD() {
+        init();
     }
 
     PMD(GMD gmd) {
         this.gmd = gmd;
+        init();
+    }
+
+    public final void init() {
+        pageEnd = Math.abs(pageEnd);
+        pageStart = Math.abs(pageStart);
+        rowsPerPage = Math.abs(rowsPerPage);
+
+        pageStart = pageStart > gmd.getFirst() ? gmd.getFirst() : pageStart;
+        pageEnd = pageEnd + rowsPerPage > gmd.getLast() ? gmd.getLast() : pageEnd;
+        if (pageEnd == gmd.getLast()) {
+            setLastPage(true);
+        }
+
+        if (lastPage) {
+            pageEnd = gmd.getLast();
+            pageStart = pageEnd - rowsPerPage;
+        }
+
+        pageEnd = Math.abs(pageEnd);
+        pageStart = Math.abs(pageStart);
+        rowsPerPage = Math.abs(rowsPerPage);
+
+        if (pageStart > pageEnd) {
+            pageStart = pageEnd;
+        }
+
+        if (pageStart == 0) {
+            pageStart = 5;
+            pageEnd = pageStart + rowsPerPage;
+        }
+
     }
 
     public GMD getGmd() {
@@ -25,35 +60,52 @@ public class PMD {
         this.gmd = gmd;
     }
 
-    public int getCursor() {
-        return cursor;
+    public int getPageStart() {
+        LOG.info("pageStart\t\t" + pageStart);
+        return pageStart;
     }
 
-    public void setCursor(int cursor) {
-        this.cursor = cursor;
+    public void setPageStart(int pageStart) {
+        this.pageStart = pageStart;
     }
 
-    public int getMin() {
-        return Math.abs(min);
+    public int getPageEnd() {
+
+        LOG.info("pageEnd\t\t" + pageEnd);
+        return pageEnd;
     }
 
-    public void setMin(int min) {
-        this.min = min;
+    public void setPageEnd(int pageEnd) {
+        this.pageEnd = pageEnd;
     }
 
-    public int getMax() {
-        return Math.abs(max);
+    public int getRowsPerPage() {
+        return rowsPerPage;
     }
 
-    public void setMax(int max) {
-        this.max = max;
+    public void setRowsPerPage(int rowsPerPage) {
+        this.rowsPerPage = rowsPerPage;
     }
 
-    public int getSize() {
-        return Math.abs(size);
+    public boolean isLastPage() {
+        return lastPage;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setLastPage(boolean lastPage) {
+        this.lastPage = lastPage;
+    }
+
+    public PMD getNext() {
+        PMD pmd = new PMD();
+        pmd.setGmd(gmd);
+        pmd.setPageEnd(pageEnd + rowsPerPage);
+        pmd.setPageStart(pageEnd + 1);
+        pmd.setRowsPerPage(rowsPerPage);
+        pmd.init();
+        return pmd;
+    }
+
+    public String toString() {
+        return pageStart + "\t\t" + pageEnd;
     }
 }

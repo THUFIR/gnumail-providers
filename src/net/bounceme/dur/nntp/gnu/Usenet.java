@@ -1,5 +1,6 @@
 package net.bounceme.dur.nntp.gnu;
 
+import gnu.mail.providers.nntp.GMD;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,10 +47,17 @@ public enum Usenet {
         folder = root.getFolder(pmd.getGmd().getGroup());
         folder.open(Folder.READ_ONLY);
         LOG.fine("..fetched " + folder);
-        List<Message> messages = Arrays.asList(folder.getMessages());
+        GMD gmd = pmd.getGmd();
+        LOG.info(gmd.toString());
+        gmd.setOpen(true);
+        pmd.setGmd(gmd);
+        pmd.init();
+        LOG.info(pmd.toString());
+        List<Message> messages = Arrays.asList(folder.getMessages(pmd.getPageStart(), pmd.getPageEnd()));
         messages = Collections.unmodifiableList(messages);
-        Page page = new Page(pmd,messages);
-        return page;
+        Page p = new Page(pmd, messages);
+
+        return p;
     }
 
     public List<Folder> getFolders() {

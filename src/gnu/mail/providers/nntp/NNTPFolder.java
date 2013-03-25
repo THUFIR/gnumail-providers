@@ -238,7 +238,7 @@ public final class NNTPFolder extends Folder {
     public Message getMessage(int msgnum)
             throws MessagingException {
         if (!gmd.isOpen()) {
-            throw new IllegalStateException();
+            //throw new IllegalStateException();
         }
 
         // Cache lookup
