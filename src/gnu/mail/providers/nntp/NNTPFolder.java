@@ -57,7 +57,7 @@ import gnu.inet.nntp.NNTPException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Logger;
-import net.bounceme.dur.nntp.gnu.GMD;
+import net.bounceme.dur.nntp.gnu.GroupMetaData;
 import net.bounceme.dur.nntp.gnu.PageMetaData;
 
 /**
@@ -69,28 +69,27 @@ import net.bounceme.dur.nntp.gnu.PageMetaData;
 public final class NNTPFolder extends Folder {
 
     private static final Logger LOG = Logger.getLogger(NNTPFolder.class.getName());
-    private GMD gmd = new GMD();
+    private GroupMetaData groupMetaData = new GroupMetaData();
     Map articleCache; // cache of article-number to NNTPMessage
 
     NNTPFolder(NNTPStore ns, String name) {
         super(ns);
-        gmd = new GMD(name);
+        groupMetaData = new GroupMetaData(name);
     }
 
-    public List<Message> getMessages(PageMetaData pmd) {
-        LOG.fine("pmd\n" + pmd.toString());
+    public List<Message> getMessages(PageMetaData pageMetaData) throws IOException {
+        String group = pageMetaData.getGmd().getGroup();
+        int min = pageMetaData.getPageStart();
+        int max = pageMetaData.getPageEnd();
         List<Message> messages = new ArrayList<>();
         Message message = null;
-        for (int i = pmd.getPageStart(); i < pmd.getPageEnd(); i++) {
-            NNTPStore ns = (NNTPStore) store;
-            NNTPConnection connection = ns.connection;
-            synchronized (connection) {
-                try {
-                    GroupResponse gr = connection.group(pmd.getGmd().getGroup());
-                    message = getMessageImpl(i);
-                } catch (IOException ex) {
-                    LOG.fine(ex.getMessage());
-                }
+        NNTPStore ns = (NNTPStore) store;
+        NNTPConnection connection = ns.connection;
+        synchronized (connection) {
+            GroupResponse gr = connection.group(group);
+            groupMetaData = new GroupMetaData(gr);
+            for (int i = min; i < max; i++) {
+                message = getMessageImpl(i);
             }
             messages.add(message);
             messages.removeAll(Collections.singleton(null));
@@ -102,14 +101,14 @@ public final class NNTPFolder extends Folder {
      * Returns the name of the newsgroup, e.g. <code>alt.test</code>.
      */
     public String getName() {
-        return gmd.getGroup();
+        return groupMetaData.getGroup();
     }
 
     /**
      * @see #getName
      */
     public String getFullName() {
-        return gmd.getGroup();
+        return groupMetaData.getGroup();
     }
 
     /**
@@ -132,7 +131,7 @@ public final class NNTPFolder extends Folder {
     }
 
     public boolean isOpen() {
-        return gmd.isOpen();
+        return groupMetaData.isOpen();
     }
 
     /**
@@ -159,19 +158,19 @@ public final class NNTPFolder extends Folder {
             throws MessagingException {
         // NB this should probably throw an exception if READ_WRITE is
         // specified, but this tends to cause problems with existing clients.
-        if (gmd.isOpen()) {
+        if (groupMetaData.isOpen()) {
             throw new IllegalStateException();
         }
         GroupResponse groupResponse;
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
-                groupResponse = ns.connection.group(gmd.getGroup());
-                gmd = new GMD(groupResponse);
+                groupResponse = ns.connection.group(groupMetaData.getGroup());
+                groupMetaData = new GroupMetaData(groupResponse);
             }
 
             articleCache = new HashMap(1024); // TODO make configurable
-            gmd.setOpen(true);
+            groupMetaData.setOpen(true);
             notifyConnectionListeners(ConnectionEvent.OPENED);
         } catch (NNTPException e) {
             if (e.getResponse().getStatus() == NNTPConstants.NO_SUCH_GROUP) {
@@ -189,13 +188,13 @@ public final class NNTPFolder extends Folder {
      */
     public void close(boolean expunge)
             throws MessagingException {
-        if (!gmd.isOpen()) {
+        if (!groupMetaData.isOpen()) {
             throw new IllegalStateException();
         }
 
         articleCache = null;
-        gmd = new GMD();
-        gmd.setOpen(false);
+        groupMetaData = new GroupMetaData();
+        groupMetaData.setOpen(false);
         notifyConnectionListeners(ConnectionEvent.CLOSED);
     }
 
@@ -207,8 +206,8 @@ public final class NNTPFolder extends Folder {
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
-                grpResp = ns.connection.group(gmd.getGroup());
-                gmd = new GMD(grpResp);
+                grpResp = ns.connection.group(groupMetaData.getGroup());
+                groupMetaData = new GroupMetaData(grpResp);
             }
             return true;
         } catch (NNTPException e) {
@@ -231,12 +230,12 @@ public final class NNTPFolder extends Folder {
             NNTPStore ns = (NNTPStore) store;
             boolean hasNew = false;
             synchronized (ns.connection) {
-                GroupResponse groupResponse = ns.connection.group(gmd.getGroup());
-                GMD newGroupMetaData = new GMD(groupResponse);
-                if (newGroupMetaData.getLast() > gmd.getLast()) {
+                GroupResponse groupResponse = ns.connection.group(groupMetaData.getGroup());
+                GroupMetaData newGroupMetaData = new GroupMetaData(groupResponse);
+                if (newGroupMetaData.getLast() > groupMetaData.getLast()) {
                     hasNew = true;
                 }
-                gmd = new GMD(groupResponse);
+                groupMetaData = new GroupMetaData(groupResponse);
             }
             return hasNew;
         } catch (NNTPException e) {
@@ -255,7 +254,7 @@ public final class NNTPFolder extends Folder {
      */
     public int getMessageCount()
             throws MessagingException {
-        return gmd.getCount();
+        return groupMetaData.getCount();
     }
 
     /**
@@ -265,7 +264,7 @@ public final class NNTPFolder extends Folder {
      */
     public Message getMessage(int msgnum)
             throws MessagingException {
-        if (!gmd.isOpen()) {
+        if (!groupMetaData.isOpen()) {
             //throw new IllegalStateException();
         }
 
@@ -281,10 +280,10 @@ public final class NNTPFolder extends Folder {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 // Ensure group selected
-                grpResp = ns.connection.group(gmd.getGroup());
-                gmd = new GMD(grpResp);
+                grpResp = ns.connection.group(groupMetaData.getGroup());
+                groupMetaData = new GroupMetaData(grpResp);
                 // Get article
-                m = getMessageImpl(msgnum - 1 + gmd.getFirst());
+                m = getMessageImpl(msgnum - 1 + groupMetaData.getFirst());
                 // Cache store
                 articleCache.put(key, m);
                 return m;
@@ -329,8 +328,8 @@ public final class NNTPFolder extends Folder {
         synchronized (ns.connection) {
             try {
                 // Ensure group selected
-                grpResp = ns.connection.group(gmd.getGroup());
-                gmd = new GMD(grpResp);
+                grpResp = ns.connection.group(groupMetaData.getGroup());
+                groupMetaData = new GroupMetaData(grpResp);
                 // Get Message-IDs for all article numbers
                 StringBuffer rb = new StringBuffer();
                 rb.append(Integer.toString(grpResp.first));
@@ -472,7 +471,7 @@ public final class NNTPFolder extends Folder {
      */
     public boolean isSubscribed() {
         NNTPStore ns = (NNTPStore) store;
-        return ns.newsrc.isSubscribed(gmd.getGroup());
+        return ns.newsrc.isSubscribed(groupMetaData.getGroup());
     }
 
     /**
@@ -481,17 +480,17 @@ public final class NNTPFolder extends Folder {
      */
     public void setSubscribed(boolean flag) throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
-        ns.newsrc.setSubscribed(gmd.getGroup(), flag);
+        ns.newsrc.setSubscribed(groupMetaData.getGroup(), flag);
     }
 
     boolean isSeen(int articleNumber) {
         NNTPStore ns = (NNTPStore) store;
-        return ns.newsrc.isSeen(gmd.getGroup(), articleNumber);
+        return ns.newsrc.isSeen(groupMetaData.getGroup(), articleNumber);
     }
 
     void setSeen(int articleNumber, boolean flag) {
         NNTPStore ns = (NNTPStore) store;
-        ns.newsrc.setSeen(gmd.getGroup(), articleNumber, flag);
+        ns.newsrc.setSeen(groupMetaData.getGroup(), articleNumber, flag);
     }
 
     // -- Stuff we can't do --

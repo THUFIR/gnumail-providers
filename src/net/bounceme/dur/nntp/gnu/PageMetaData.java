@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 public class PageMetaData {
 
     private static final Logger LOG = Logger.getLogger(PageMetaData.class.getName());
-    private GMD gmd = new GMD();
+    private GroupMetaData gmd = new GroupMetaData();
     private int pageStart = 0;
     private int pageEnd = 0;
     private int rowsPerPage = 5;
@@ -15,7 +15,7 @@ public class PageMetaData {
         //init();
     }
 
-    PageMetaData(GMD gmd) {
+    PageMetaData(GroupMetaData gmd) {
         this.gmd = gmd;
         //init();
     }
@@ -52,11 +52,11 @@ public class PageMetaData {
 
     }*/
 
-    public GMD getGmd() {
+    public GroupMetaData getGmd() {
         return gmd;
     }
 
-    public void setGmd(GMD gmd) {
+    public void setGmd(GroupMetaData gmd) {
         this.gmd = gmd;
     }
 

@@ -2,7 +2,7 @@ package net.bounceme.dur.nntp.gnu;
 
 import gnu.inet.nntp.GroupResponse;
 
-public class GMD {
+public class GroupMetaData {
 
     private String group = "no.group.here.null.null.null";
     private int count = 0;
@@ -10,14 +10,14 @@ public class GMD {
     private int last = 0;
     private boolean open = false;
 
-    public GMD() {
+    public GroupMetaData() {
     }
 
-    public GMD(String group) {
+    public GroupMetaData(String group) {
         this.group = group;
     }
 
-    public GMD(GroupResponse gr) {
+    public GroupMetaData(GroupResponse gr) {
         group = gr.group;
     }
 

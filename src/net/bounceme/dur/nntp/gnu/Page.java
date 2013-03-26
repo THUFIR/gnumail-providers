@@ -15,11 +15,11 @@ public class Page {
     private PageMetaData pmd = new PageMetaData();
 
     public Page() throws Exception {
-        GMD gmd = new GMD(getNewsgroup());
+        GroupMetaData gmd = new GroupMetaData(getNewsgroup());
         pmd = new PageMetaData(gmd);
     }
 
-    public Page(GMD gmd) throws Exception {
+    public Page(GroupMetaData gmd) throws Exception {
         pmd = new PageMetaData(gmd);
     }
 

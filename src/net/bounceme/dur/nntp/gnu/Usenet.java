@@ -2,6 +2,7 @@ package net.bounceme.dur.nntp.gnu;
 
 import gnu.mail.providers.nntp.NNTPFolder;
 import gnu.mail.providers.nntp.NNTPRootFolder;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,13 +44,19 @@ public enum Usenet {
     }
 
     public Page getPage(PageMetaData pmd) throws Exception {
-        LOG.fine("fetching.." + pmd.getGmd().getGroup());
-        folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
-        folder.open(Folder.READ_ONLY);
-        LOG.fine("..fetched " + folder);
-        LOG.fine(pmd.toString());
-        List<javax.mail.Message> messages = folder.getMessages(pmd);
-        Page p = new Page(pmd, messages);
+        Page p = new Page(pmd);
+        try {
+            LOG.fine("fetching.." + pmd.getGmd().getGroup());
+            folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
+            folder.open(Folder.READ_ONLY);
+            LOG.fine("..fetched " + folder);
+            LOG.fine(pmd.toString());
+            List<javax.mail.Message> messages = folder.getMessages(pmd);
+            p = new Page(pmd, messages);
+            return p;
+        } catch (IOException | MessagingException ex) {
+            LOG.warning("some minor problem, probably" + ex);
+        }
         return p;
     }
 
