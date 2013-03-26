@@ -66,7 +66,7 @@ public class Page {
                     sb.append(s);
                 }
             }
-            
+
             LOG.fine("\n\n\n**********************\n\n\n");
         }
         LOG.fine(sb.toString());
@@ -74,9 +74,9 @@ public class Page {
     }
 
     public String toString() {
-        String s = null;
+        String s = "\n---new page---";
         try {
-            s = printXref();
+            s = s + printXref();
         } catch (MessagingException ex) {
             LOG.severe(ex.getMessage());
         }
