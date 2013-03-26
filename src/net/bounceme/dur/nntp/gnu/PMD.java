@@ -45,7 +45,8 @@ public class PMD {
             pageStart = pageEnd;
         }
 
-        if (pageStart == 0) {
+        //here starts gibberish
+        if (pageStart < 2) {
             pageStart = 5;
             pageEnd = pageStart + rowsPerPage;
         }
