@@ -11,7 +11,7 @@ public class Pages {
         LOG.fine("in constructor");
         PMD pmd = new PMD(new GMD("comp.lang.java.help")); //dummy
         Page page = u.getPage(pmd);
-        LOG.info(page.toString());
+        LOG.fine(page.toString());
     }
 
     public static void main(String... args) throws Exception {

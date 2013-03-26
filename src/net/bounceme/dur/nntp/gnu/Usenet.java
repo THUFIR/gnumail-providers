@@ -49,7 +49,7 @@ public enum Usenet {
         LOG.fine("..fetched " + folder);
         pmd.init();
         LOG.fine(pmd.toString());
-        List<Message> messages = folder.getMessages(pmd);
+        List<javax.mail.Message> messages = folder.getMessages(pmd);
         Page p = new Page(pmd, messages);
         return p;
     }

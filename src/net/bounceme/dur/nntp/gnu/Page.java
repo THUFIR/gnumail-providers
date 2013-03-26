@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.mail.Header;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 
 public class Page {
 
     private final static Logger LOG = Logger.getLogger(Page.class.getName());
-    private List<Message> m = new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
     private PMD pmd = new PMD();
 
     public Page() throws Exception {
@@ -26,14 +27,10 @@ public class Page {
         this.pmd = pmd;
     }
 
-    public Page(PMD pmd, List<Message> m)  {
+    public Page(PMD pmd, List<Message> messages) throws MessagingException {
         this.pmd = pmd;
-        this.m = m;
-        try {
-            printXref();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        this.messages = messages;
+        //printXref();
     }
 
     public String getNewsgroup() {
@@ -41,7 +38,7 @@ public class Page {
     }
 
     public String toString() {
-        return "fuck";
+        return "messages in Page:\t\t" + messages.size();
     }
 
     public PMD getPmd() {
@@ -52,10 +49,12 @@ public class Page {
         this.pmd = pmd;
     }
 
-    private void printXref() throws Exception {
-        for (Message msg : m) {
-            int i = m.indexOf(msg);
-            Enumeration headers = msg.getAllHeaders();
+    private void printXref() throws MessagingException {
+        LOG.info("starting xref printing...\t\t" + messages.size());
+        for (Message message : messages) {
+            LOG.info(message.getSubject());
+            int i = messages.indexOf(message);
+            Enumeration headers = message.getAllHeaders();
             while (headers.hasMoreElements()) {
                 Object o = headers.nextElement();
                 Header header = (Header) o;
@@ -67,7 +66,7 @@ public class Page {
                     LOG.info(i + "\t\t" + xref);
                 }
             }
-            LOG.fine(msg.getSubject());
+            LOG.fine(message.getSubject());
             LOG.fine("\n\n\n**********************\n\n\n");
         }
     }
