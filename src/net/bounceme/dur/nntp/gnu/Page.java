@@ -62,10 +62,11 @@ public class Page {
                     int index = headerString.indexOf(":");
                     subString = headerString.substring(index + 1);
                     int xref = Integer.parseInt(subString);
-                    s = "\n"+i + "\t\t" + xref ;
+                    s = "\n" + i + "\t\t" + xref;
                     sb.append(s);
                 }
             }
+            
             LOG.fine("\n\n\n**********************\n\n\n");
         }
         LOG.fine(sb.toString());
