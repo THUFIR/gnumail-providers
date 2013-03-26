@@ -26,6 +26,7 @@
  */
 package gnu.mail.providers.nntp;
 
+import gnu.inet.nntp.NNTPConnection;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -53,6 +54,7 @@ import gnu.inet.nntp.HeaderIterator;
 import gnu.inet.nntp.NNTPConstants;
 import gnu.inet.nntp.NNTPException;
 import java.util.ArrayList;
+import java.util.Collections;
 import net.bounceme.dur.nntp.gnu.PMD;
 
 /**
@@ -76,12 +78,19 @@ public final class NNTPFolder extends Folder {
         this.name = name;
     }
 
-    public List<Message> getMessages(PMD pmd) throws MessagingException {
+    public List<Message> getMessages(PMD pmd) throws MessagingException, IOException {
+        LOG.fine("pmd\n" + pmd.toString());
         List<Message> messages = new ArrayList<>();
         Message message = null;
         for (int i = pmd.getPageStart(); i < pmd.getPageEnd(); i++) {
-            Message foo = (Message) articleCache.get(i);
+            NNTPStore ns = (NNTPStore) store;
+            NNTPConnection connection = ns.connection;
+            synchronized (connection) {
+                GroupResponse gr = connection.group(pmd.getGmd().getGroup());
+                message = getMessageImpl(i);
+            }
             messages.add(message);
+            messages.removeAll(Collections.singleton(null));
         }
         return messages;
     }
