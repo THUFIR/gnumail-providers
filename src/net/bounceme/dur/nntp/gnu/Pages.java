@@ -10,8 +10,14 @@ public class Pages {
     public Pages() throws Exception {
         LOG.fine("in constructor");
         PMD pmd = new PMD(new GMD("comp.lang.java.help")); //dummy
-        Page page = u.getPage(pmd);
-        LOG.fine(page.toString());
+        Page page = null;
+        for (int i = 0; i < 3; i++) {
+            LOG.fine("in loop");
+            page = new Page(pmd);
+            page = u.getPage(page.getPmd());
+            pmd = pmd.getNext();
+            LOG.info(page.toString());
+        }
     }
 
     public static void main(String... args) throws Exception {

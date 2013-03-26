@@ -96,12 +96,12 @@ public class PMD {
     }
 
     public PMD getNext() {
+        LOG.info("getting next..");
         PMD pmd = new PMD();
         pmd.setGmd(gmd);
         pmd.setPageEnd(pageEnd + rowsPerPage);
         pmd.setPageStart(pageEnd + 1);
         pmd.setRowsPerPage(rowsPerPage);
-        pmd.init();
         return pmd;
     }
 

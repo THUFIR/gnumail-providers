@@ -30,15 +30,10 @@ public class Page {
     public Page(PMD pmd, List<Message> messages) throws MessagingException {
         this.pmd = pmd;
         this.messages = messages;
-        printXref();
     }
 
     public String getNewsgroup() {
         return "comp.lang.java.help";
-    }
-
-    public String toString() {
-        return "messages in Page:\t\t" + messages.size();
     }
 
     public PMD getPmd() {
@@ -49,12 +44,12 @@ public class Page {
         this.pmd = pmd;
     }
 
-    private void printXref() throws MessagingException {
-        LOG.info("starting xref printing...\t\t" + messages.size());
+    private String printXref() throws MessagingException {
+        LOG.fine("starting xref printing...\t\t" + messages.size());
         StringBuilder sb = new StringBuilder();
-        String s = new String();
-        String headerString;
-        String subString;
+        String s = null;
+        String headerString = null;
+        String subString = null;
         for (Message message : messages) {
             LOG.fine(message.getSubject());
             int i = messages.indexOf(message);
@@ -67,11 +62,23 @@ public class Page {
                     int index = headerString.indexOf(":");
                     subString = headerString.substring(index + 1);
                     int xref = Integer.parseInt(subString);
-                    LOG.fine(i + "\t\t" + xref);
+                    s = "\n"+i + "\t\t" + xref ;
+                    sb.append(s);
                 }
             }
-            LOG.fine(message.getSubject());
             LOG.fine("\n\n\n**********************\n\n\n");
         }
+        LOG.fine(sb.toString());
+        return sb.toString();
+    }
+
+    public String toString() {
+        String s = null;
+        try {
+            s = printXref();
+        } catch (MessagingException ex) {
+            LOG.severe(ex.getMessage());
+        }
+        return s;
     }
 }
