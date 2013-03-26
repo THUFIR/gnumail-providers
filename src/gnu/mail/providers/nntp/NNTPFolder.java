@@ -78,7 +78,7 @@ public final class NNTPFolder extends Folder {
         this.name = name;
     }
 
-    public List<Message> getMessages(PMD pmd) throws MessagingException, IOException {
+    public List<Message> getMessages(PMD pmd) {
         LOG.fine("pmd\n" + pmd.toString());
         List<Message> messages = new ArrayList<>();
         Message message = null;
@@ -86,8 +86,12 @@ public final class NNTPFolder extends Folder {
             NNTPStore ns = (NNTPStore) store;
             NNTPConnection connection = ns.connection;
             synchronized (connection) {
-                GroupResponse gr = connection.group(pmd.getGmd().getGroup());
-                message = getMessageImpl(i);
+                try {
+                    GroupResponse gr = connection.group(pmd.getGmd().getGroup());
+                    message = getMessageImpl(i);
+                } catch (IOException ex) {
+                    LOG.fine(ex.getMessage());
+                }
             }
             messages.add(message);
             messages.removeAll(Collections.singleton(null));

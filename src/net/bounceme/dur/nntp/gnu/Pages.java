@@ -11,7 +11,7 @@ public class Pages {
         LOG.fine("in constructor");
         PMD pmd = new PMD(new GMD("comp.lang.java.help")); //dummy
         Page page = null;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 20; i++) {
             LOG.fine("in loop");
             page = new Page(pmd);
             page = u.getPage(page.getPmd());

@@ -12,15 +12,15 @@ public class PMD {
     private boolean lastPage = false;
 
     public PMD() {
-        init();
+        //init();
     }
 
     PMD(GMD gmd) {
         this.gmd = gmd;
-        init();
+        //init();
     }
 
-    public final void init() {
+    /*public final void init() {
         pageEnd = Math.abs(pageEnd);
         pageStart = Math.abs(pageStart);
         rowsPerPage = Math.abs(rowsPerPage);
@@ -50,7 +50,7 @@ public class PMD {
             pageEnd = pageStart + rowsPerPage;
         }
 
-    }
+    }*/
 
     public GMD getGmd() {
         return gmd;
@@ -106,6 +106,6 @@ public class PMD {
     }
 
     public String toString() {
-        return pageStart + "\t\t" + pageEnd;
+        return "---pmd---\n" + pageStart + "\t\t" + pageEnd;
     }
 }

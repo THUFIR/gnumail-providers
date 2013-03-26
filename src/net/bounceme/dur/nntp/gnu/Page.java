@@ -74,7 +74,7 @@ public class Page {
     }
 
     public String toString() {
-        String s = "\n---new page---";
+        String s = "\n---new page---\n" + pmd.toString()+"\n";
         try {
             s = s + printXref();
         } catch (MessagingException ex) {

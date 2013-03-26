@@ -47,7 +47,6 @@ public enum Usenet {
         folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
         folder.open(Folder.READ_ONLY);
         LOG.fine("..fetched " + folder);
-        pmd.init();
         LOG.fine(pmd.toString());
         List<javax.mail.Message> messages = folder.getMessages(pmd);
         Page p = new Page(pmd, messages);
