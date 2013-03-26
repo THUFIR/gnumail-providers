@@ -30,7 +30,7 @@ public class Page {
     Page(PMD pmd, List<Message> m) throws Exception {
         this.pmd = pmd;
         this.m = m;
-        print();
+        printXref();
     }
 
     public String getNewsgroup() {
@@ -49,10 +49,11 @@ public class Page {
         this.pmd = pmd;
     }
 
-    private void print() throws Exception {
-
-        for (int i = 1; i < 5; i++) {
-            Message msg = m.get(i);
+    private void printXref() throws Exception {
+        //for (int i = 1; i < 5; i++) {
+        for (Message msg : m) {
+            int i = m.indexOf(msg);
+            //Message msg = m.get(i);
             Enumeration headers = msg.getAllHeaders();
             while (headers.hasMoreElements()) {
                 Object o = headers.nextElement();
@@ -60,9 +61,9 @@ public class Page {
                 if ("Xref".equals(header.getName())) {
                     String headerString = header.getValue();
                     int index = headerString.indexOf(":");
-                    String subString = headerString.substring(index+1);
+                    String subString = headerString.substring(index + 1);
                     int xref = Integer.parseInt(subString);
-                    LOG.info(Integer.toString(xref));
+                    LOG.info(i + "\t\t" + xref);
                 }
             }
             LOG.fine(msg.getSubject());

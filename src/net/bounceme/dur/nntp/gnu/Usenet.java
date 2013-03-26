@@ -47,13 +47,9 @@ public enum Usenet {
         folder = root.getFolder(pmd.getGmd().getGroup());
         folder.open(Folder.READ_ONLY);
         LOG.fine("..fetched " + folder);
-        GMD gmd = pmd.getGmd();
-        LOG.info(gmd.toString());
-        gmd.setOpen(true);
-        pmd.setGmd(gmd);
         pmd.init();
-        LOG.info(pmd.toString());
-        List<Message> messages = Arrays.asList(folder.getMessages(pmd.getPageStart(), pmd.getPageEnd()));
+        LOG.fine(pmd.toString());
+        List<Message> messages = Arrays.asList(folder.getMessages());
         messages = Collections.unmodifiableList(messages);
         Page p = new Page(pmd, messages);
 
