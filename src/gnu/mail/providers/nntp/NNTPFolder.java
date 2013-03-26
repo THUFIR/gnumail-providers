@@ -1,3 +1,4 @@
+
 /*
  * NNTPFolder.java
  * Copyright(C) 2002 Chris Burdess <dog@gnu.org>
@@ -11,12 +12,12 @@
  *
  * GNU JavaMail is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * As a special exception, if you link this library with other files to
  * produce an executable, this library does not by itself cause the
@@ -24,9 +25,9 @@
  * This exception does not however invalidate any other reasons why the
  * executable file might be covered by the GNU General Public License.
  */
+//starting patch
 package gnu.mail.providers.nntp;
 
-import gnu.inet.nntp.NNTPConnection;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,7 +36,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import java.util.logging.Logger;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -51,11 +51,14 @@ import gnu.inet.nntp.ArticleResponse;
 import gnu.inet.nntp.GroupResponse;
 import gnu.inet.nntp.HeaderEntry;
 import gnu.inet.nntp.HeaderIterator;
+import gnu.inet.nntp.NNTPConnection;
 import gnu.inet.nntp.NNTPConstants;
 import gnu.inet.nntp.NNTPException;
 import java.util.ArrayList;
 import java.util.Collections;
-import net.bounceme.dur.nntp.gnu.PMD;
+import java.util.logging.Logger;
+import net.bounceme.dur.nntp.gnu.GMD;
+import net.bounceme.dur.nntp.gnu.PageMetaData;
 
 /**
  * A JavaMail folder delegate for an NNTP newsgroup.
@@ -66,19 +69,15 @@ import net.bounceme.dur.nntp.gnu.PMD;
 public final class NNTPFolder extends Folder {
 
     private static final Logger LOG = Logger.getLogger(NNTPFolder.class.getName());
-    String name;
-    int first = -1;
-    int last = -1;
-    int count = -1;
-    boolean open;
+    private GMD gmd = new GMD();
     Map articleCache; // cache of article-number to NNTPMessage
 
-    NNTPFolder(NNTPStore store, String name) {
-        super(store);
-        this.name = name;
+    NNTPFolder(NNTPStore ns, String name) {
+        super(ns);
+        gmd = new GMD(name);
     }
 
-    public List<Message> getMessages(PMD pmd) {
+    public List<Message> getMessages(PageMetaData pmd) {
         LOG.fine("pmd\n" + pmd.toString());
         List<Message> messages = new ArrayList<>();
         Message message = null;
@@ -103,14 +102,14 @@ public final class NNTPFolder extends Folder {
      * Returns the name of the newsgroup, e.g. <code>alt.test</code>.
      */
     public String getName() {
-        return name;
+        return gmd.getGroup();
     }
 
     /**
      * @see #getName
      */
     public String getFullName() {
-        return name;
+        return gmd.getGroup();
     }
 
     /**
@@ -133,7 +132,7 @@ public final class NNTPFolder extends Folder {
     }
 
     public boolean isOpen() {
-        return open;
+        return gmd.isOpen();
     }
 
     /**
@@ -160,20 +159,19 @@ public final class NNTPFolder extends Folder {
             throws MessagingException {
         // NB this should probably throw an exception if READ_WRITE is
         // specified, but this tends to cause problems with existing clients.
-        if (open) {
+        if (gmd.isOpen()) {
             throw new IllegalStateException();
         }
+        GroupResponse groupResponse;
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
-                GroupResponse response = ns.connection.group(name);
-                count = response.count;
-                first = response.first;
-                last = response.last;
+                groupResponse = ns.connection.group(gmd.getGroup());
+                gmd = new GMD(groupResponse);
             }
 
             articleCache = new HashMap(1024); // TODO make configurable
-            open = true;
+            gmd.setOpen(true);
             notifyConnectionListeners(ConnectionEvent.OPENED);
         } catch (NNTPException e) {
             if (e.getResponse().getStatus() == NNTPConstants.NO_SUCH_GROUP) {
@@ -191,27 +189,26 @@ public final class NNTPFolder extends Folder {
      */
     public void close(boolean expunge)
             throws MessagingException {
-        if (!open) {
+        if (!gmd.isOpen()) {
             throw new IllegalStateException();
         }
 
         articleCache = null;
-        open = false;
+        gmd = new GMD();
+        gmd.setOpen(false);
         notifyConnectionListeners(ConnectionEvent.CLOSED);
     }
 
     /**
      * Indicates whether the newsgroup is present on the server.
      */
-    public boolean exists()
-            throws MessagingException {
+    public boolean exists() throws MessagingException {
+        GroupResponse grpResp = null;
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
-                GroupResponse response = ns.connection.group(name);
-                count = response.count;
-                first = response.first;
-                last = response.last;
+                grpResp = ns.connection.group(gmd.getGroup());
+                gmd = new GMD(grpResp);
             }
             return true;
         } catch (NNTPException e) {
@@ -234,13 +231,12 @@ public final class NNTPFolder extends Folder {
             NNTPStore ns = (NNTPStore) store;
             boolean hasNew = false;
             synchronized (ns.connection) {
-                GroupResponse response = ns.connection.group(name);
-                if (response.last > last) {
+                GroupResponse groupResponse = ns.connection.group(gmd.getGroup());
+                GMD newGroupMetaData = new GMD(groupResponse);
+                if (newGroupMetaData.getLast() > gmd.getLast()) {
                     hasNew = true;
                 }
-                count = response.count;
-                first = response.first;
-                last = response.last;
+                gmd = new GMD(groupResponse);
             }
             return hasNew;
         } catch (NNTPException e) {
@@ -259,7 +255,7 @@ public final class NNTPFolder extends Folder {
      */
     public int getMessageCount()
             throws MessagingException {
-        return count;
+        return gmd.getCount();
     }
 
     /**
@@ -269,8 +265,8 @@ public final class NNTPFolder extends Folder {
      */
     public Message getMessage(int msgnum)
             throws MessagingException {
-        if (!open) {
-            throw new IllegalStateException();
+        if (!gmd.isOpen()) {
+            //throw new IllegalStateException();
         }
 
         // Cache lookup
@@ -279,17 +275,16 @@ public final class NNTPFolder extends Folder {
         if (m != null) {
             return m;
         }
+        GroupResponse grpResp = null;
 
         try {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 // Ensure group selected
-                GroupResponse gr = ns.connection.group(name);
-                first = gr.first;
-                last = gr.last;
-                count = gr.count;
+                grpResp = ns.connection.group(gmd.getGroup());
+                gmd = new GMD(grpResp);
                 // Get article
-                m = getMessageImpl(msgnum - 1 + first);
+                m = getMessageImpl(msgnum - 1 + gmd.getFirst());
                 // Cache store
                 articleCache.put(key, m);
                 return m;
@@ -330,18 +325,17 @@ public final class NNTPFolder extends Folder {
             throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
         List acc = new LinkedList();
+        GroupResponse grpResp = null;
         synchronized (ns.connection) {
             try {
                 // Ensure group selected
-                GroupResponse gr = ns.connection.group(name);
-                first = gr.first;
-                last = gr.last;
-                count = gr.count;
+                grpResp = ns.connection.group(gmd.getGroup());
+                gmd = new GMD(grpResp);
                 // Get Message-IDs for all article numbers
                 StringBuffer rb = new StringBuffer();
-                rb.append(Integer.toString(first));
+                rb.append(Integer.toString(grpResp.first));
                 rb.append('-');
-                rb.append(Integer.toString(last));
+                rb.append(Integer.toString(grpResp.last));
                 HeaderIterator i = ns.connection.xhdr("Message-ID",
                         rb.toString());
                 while (i.hasNext()) {
@@ -361,7 +355,7 @@ public final class NNTPFolder extends Folder {
             } catch (NNTPException e) {
                 // Perhaps the server does not understand XHDR.
                 // We'll do it the slow way.
-                for (int i = first; i <= last; i++) {
+                for (int i = grpResp.first; i <= grpResp.last; i++) {
                     Integer key = new Integer(i);
                     // Cache lookup
                     Message m = (NNTPMessage) articleCache.get(key);
@@ -399,8 +393,7 @@ public final class NNTPFolder extends Folder {
     /**
      * Prefetch.
      */
-    public void fetch(Message[] msgs, FetchProfile fp)
-            throws MessagingException {
+    public void fetch(Message[] msgs, FetchProfile fp) throws MessagingException {
         boolean head = fp.contains(FetchProfile.Item.ENVELOPE);
         head = head || (fp.getHeaderNames().length > 0);
         boolean body = fp.contains(FetchProfile.Item.CONTENT_INFO);
@@ -479,27 +472,26 @@ public final class NNTPFolder extends Folder {
      */
     public boolean isSubscribed() {
         NNTPStore ns = (NNTPStore) store;
-        return ns.newsrc.isSubscribed(name);
+        return ns.newsrc.isSubscribed(gmd.getGroup());
     }
 
     /**
      * Subscribes or unsubscribes to this newsgroup.
      * This uses the newsrc mechanism associated with this folder's store.
      */
-    public void setSubscribed(boolean flag)
-            throws MessagingException {
+    public void setSubscribed(boolean flag) throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
-        ns.newsrc.setSubscribed(name, flag);
+        ns.newsrc.setSubscribed(gmd.getGroup(), flag);
     }
 
     boolean isSeen(int articleNumber) {
         NNTPStore ns = (NNTPStore) store;
-        return ns.newsrc.isSeen(name, articleNumber);
+        return ns.newsrc.isSeen(gmd.getGroup(), articleNumber);
     }
 
     void setSeen(int articleNumber, boolean flag) {
         NNTPStore ns = (NNTPStore) store;
-        ns.newsrc.setSeen(name, articleNumber, flag);
+        ns.newsrc.setSeen(gmd.getGroup(), articleNumber, flag);
     }
 
     // -- Stuff we can't do --

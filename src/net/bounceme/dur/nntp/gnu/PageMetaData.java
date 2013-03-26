@@ -2,20 +2,20 @@ package net.bounceme.dur.nntp.gnu;
 
 import java.util.logging.Logger;
 
-public class PMD {
+public class PageMetaData {
 
-    private static final Logger LOG = Logger.getLogger(PMD.class.getName());
+    private static final Logger LOG = Logger.getLogger(PageMetaData.class.getName());
     private GMD gmd = new GMD();
     private int pageStart = 0;
     private int pageEnd = 0;
     private int rowsPerPage = 5;
     private boolean lastPage = false;
 
-    public PMD() {
+    public PageMetaData() {
         //init();
     }
 
-    PMD(GMD gmd) {
+    PageMetaData(GMD gmd) {
         this.gmd = gmd;
         //init();
     }
@@ -95,9 +95,9 @@ public class PMD {
         this.lastPage = lastPage;
     }
 
-    public PMD getNext() {
+    public PageMetaData getNext() {
         LOG.info("getting next..");
-        PMD pmd = new PMD();
+        PageMetaData pmd = new PageMetaData();
         pmd.setGmd(gmd);
         pmd.setPageEnd(pageEnd + rowsPerPage);
         pmd.setPageStart(pageEnd + 1);

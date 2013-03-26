@@ -9,7 +9,7 @@ public class Pages {
 
     public Pages() throws Exception {
         LOG.fine("in constructor");
-        PMD pmd = new PMD(new GMD("comp.lang.java.help")); //dummy
+        PageMetaData pmd = new PageMetaData(new GMD("comp.lang.java.help")); //dummy
         Page page = null;
         for (int i = 0; i < 20; i++) {
             LOG.fine("in loop");

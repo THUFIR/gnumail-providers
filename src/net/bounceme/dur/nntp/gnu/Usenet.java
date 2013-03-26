@@ -42,7 +42,7 @@ public enum Usenet {
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
-    public Page getPage(PMD pmd) throws Exception {
+    public Page getPage(PageMetaData pmd) throws Exception {
         LOG.fine("fetching.." + pmd.getGmd().getGroup());
         folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
         folder.open(Folder.READ_ONLY);
