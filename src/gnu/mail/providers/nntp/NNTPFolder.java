@@ -86,8 +86,8 @@ public final class NNTPFolder extends Folder {
         NNTPStore ns = (NNTPStore) store;
         NNTPConnection connection = ns.connection;
         synchronized (connection) {
-            GroupResponse gr = connection.group(group);
-            groupMetaData = new GroupMetaData(gr);
+            GroupResponse groupResponse = connection.group(group);
+            groupMetaData = new GroupMetaData(groupResponse);
             for (int i = min; i < max; i++) {
                 message = getMessageImpl(i);
             }
@@ -170,7 +170,7 @@ public final class NNTPFolder extends Folder {
             }
 
             articleCache = new HashMap(1024); // TODO make configurable
-            groupMetaData.setOpen(true);
+            groupMetaData = new GroupMetaData(groupResponse, true);
             notifyConnectionListeners(ConnectionEvent.OPENED);
         } catch (NNTPException e) {
             if (e.getResponse().getStatus() == NNTPConstants.NO_SUCH_GROUP) {
@@ -565,4 +565,5 @@ public final class NNTPFolder extends Folder {
             throws MessagingException {
         throw new IllegalWriteException();
     }
+
 }
