@@ -1,4 +1,4 @@
-package gnu.mail.providers.nntp;
+package net.bounceme.dur.nntp.gnu;
 
 import gnu.inet.nntp.GroupResponse;
 

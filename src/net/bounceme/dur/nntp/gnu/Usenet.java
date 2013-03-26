@@ -1,21 +1,21 @@
 package net.bounceme.dur.nntp.gnu;
 
-import gnu.mail.providers.nntp.GMD;
+import gnu.mail.providers.nntp.NNTPFolder;
+import gnu.mail.providers.nntp.NNTPRootFolder;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.*;
 
-//trim, trim, trim
 public enum Usenet {
 
     INSTANCE;
     private final Logger LOG = Logger.getLogger(Usenet.class.getName());
     private Properties props = new Properties();
-    private Folder root = null;
+    private NNTPRootFolder root = null;
     private Store store = null;
     private List<Folder> folders = new ArrayList<>();
-    private Folder folder = null;
+    private NNTPFolder folder = null;
 
     Usenet() {
         LOG.fine("controller..");
@@ -34,7 +34,7 @@ public enum Usenet {
         session.setDebug(false);
         store = session.getStore(new URLName(props.getProperty("nntp.host")));
         store.connect();
-        root = store.getDefaultFolder();
+        root = (NNTPRootFolder) store.getDefaultFolder();
         LOG.fine("store is...\t" + store.toString());
         LOG.fine("root is..\t" + root.toString());
         LOG.fine("root size is..\t" + root.getFullName());
@@ -44,15 +44,13 @@ public enum Usenet {
 
     public Page getPage(PMD pmd) throws Exception {
         LOG.fine("fetching.." + pmd.getGmd().getGroup());
-        folder = root.getFolder(pmd.getGmd().getGroup());
+        folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
         folder.open(Folder.READ_ONLY);
         LOG.fine("..fetched " + folder);
         pmd.init();
         LOG.fine(pmd.toString());
-        List<Message> messages = Arrays.asList(folder.getMessages());
-        messages = Collections.unmodifiableList(messages);
+        List<Message> messages = folder.getMessages(pmd);
         Page p = new Page(pmd, messages);
-
         return p;
     }
 

@@ -1,6 +1,5 @@
 package net.bounceme.dur.nntp.gnu;
 
-import gnu.mail.providers.nntp.GMD;
 import java.util.logging.Logger;
 
 public class PMD {
@@ -62,7 +61,7 @@ public class PMD {
     }
 
     public int getPageStart() {
-        LOG.info("pageStart\t\t" + pageStart);
+        LOG.fine("pageStart\t\t" + pageStart);
         return pageStart;
     }
 
@@ -72,7 +71,7 @@ public class PMD {
 
     public int getPageEnd() {
 
-        LOG.info("pageEnd\t\t" + pageEnd);
+        LOG.fine("pageEnd\t\t" + pageEnd);
         return pageEnd;
     }
 

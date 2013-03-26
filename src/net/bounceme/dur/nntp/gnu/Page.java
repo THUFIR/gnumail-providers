@@ -1,6 +1,5 @@
 package net.bounceme.dur.nntp.gnu;
 
-import gnu.mail.providers.nntp.GMD;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -19,18 +18,22 @@ public class Page {
         pmd = new PMD(gmd);
     }
 
-    Page(GMD gmd) throws Exception {
+    public Page(GMD gmd) throws Exception {
         pmd = new PMD(gmd);
     }
 
-    Page(PMD pmd) throws Exception {
+    public Page(PMD pmd) throws Exception {
         this.pmd = pmd;
     }
 
-    Page(PMD pmd, List<Message> m) throws Exception {
+    public Page(PMD pmd, List<Message> m)  {
         this.pmd = pmd;
         this.m = m;
-        printXref();
+        try {
+            printXref();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public String getNewsgroup() {
@@ -50,10 +53,8 @@ public class Page {
     }
 
     private void printXref() throws Exception {
-        //for (int i = 1; i < 5; i++) {
         for (Message msg : m) {
             int i = m.indexOf(msg);
-            //Message msg = m.get(i);
             Enumeration headers = msg.getAllHeaders();
             while (headers.hasMoreElements()) {
                 Object o = headers.nextElement();

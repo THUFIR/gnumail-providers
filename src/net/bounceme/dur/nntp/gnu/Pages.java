@@ -1,6 +1,5 @@
 package net.bounceme.dur.nntp.gnu;
 
-import gnu.mail.providers.nntp.GMD;
 import java.util.logging.Logger;
 
 public class Pages {
