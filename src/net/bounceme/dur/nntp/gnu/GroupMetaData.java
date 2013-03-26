@@ -5,9 +5,9 @@ import gnu.inet.nntp.GroupResponse;
 public class GroupMetaData {
 
     private String group = "no.group.here.null.null.null";
-    private int count;
-    private int first;
-    private int last;
+    private int count = 0;
+    private int first = 0;
+    private int last = 0;
     private boolean open = false;
 
     public GroupMetaData() {
@@ -46,7 +46,7 @@ public class GroupMetaData {
         return open;
     }
 
-    public void setOpen(boolean open) {
+    void setOpen(boolean open) {
         this.open = open;
     }
 

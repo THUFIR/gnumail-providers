@@ -1,4 +1,3 @@
-
 /*
  * NNTPFolder.java
  * Copyright(C) 2002 Chris Burdess <dog@gnu.org>
@@ -25,7 +24,6 @@
  * This exception does not however invalidate any other reasons why the
  * executable file might be covered by the GNU General Public License.
  */
-//starting patch
 package gnu.mail.providers.nntp;
 
 import java.io.ByteArrayInputStream;
@@ -166,7 +164,7 @@ public final class NNTPFolder extends Folder {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 groupResponse = ns.connection.group(groupMetaData.getGroup());
-                groupMetaData = new GroupMetaData(groupResponse);
+                groupMetaData = new GroupMetaData(groupResponse, true);
             }
 
             articleCache = new HashMap(1024); // TODO make configurable
@@ -565,5 +563,4 @@ public final class NNTPFolder extends Folder {
             throws MessagingException {
         throw new IllegalWriteException();
     }
-
 }
