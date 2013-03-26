@@ -1,3 +1,5 @@
+//need to go back to orig.
+
 /*
  * NNTPFolder.java
  * Copyright(C) 2002 Chris Burdess <dog@gnu.org>
