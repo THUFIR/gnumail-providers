@@ -22,37 +22,36 @@ public class PageMetaData {
     }
 
     /*public final void init() {
-        pageEnd = Math.abs(pageEnd);
-        pageStart = Math.abs(pageStart);
-        rowsPerPage = Math.abs(rowsPerPage);
+    pageEnd = Math.abs(pageEnd);
+    pageStart = Math.abs(pageStart);
+    rowsPerPage = Math.abs(rowsPerPage);
 
-        pageStart = pageStart > gmd.getFirst() ? gmd.getFirst() : pageStart;
-        pageEnd = pageEnd + rowsPerPage > gmd.getLast() ? gmd.getLast() : pageEnd;
-        if (pageEnd == gmd.getLast()) {
-            setLastPage(true);
-        }
+    pageStart = pageStart > gmd.getFirst() ? gmd.getFirst() : pageStart;
+    pageEnd = pageEnd + rowsPerPage > gmd.getLast() ? gmd.getLast() : pageEnd;
+    if (pageEnd == gmd.getLast()) {
+    setLastPage(true);
+    }
 
-        if (lastPage) {
-            pageEnd = gmd.getLast();
-            pageStart = pageEnd - rowsPerPage;
-        }
+    if (lastPage) {
+    pageEnd = gmd.getLast();
+    pageStart = pageEnd - rowsPerPage;
+    }
 
-        pageEnd = Math.abs(pageEnd);
-        pageStart = Math.abs(pageStart);
-        rowsPerPage = Math.abs(rowsPerPage);
+    pageEnd = Math.abs(pageEnd);
+    pageStart = Math.abs(pageStart);
+    rowsPerPage = Math.abs(rowsPerPage);
 
-        if (pageStart > pageEnd) {
-            pageStart = pageEnd;
-        }
+    if (pageStart > pageEnd) {
+    pageStart = pageEnd;
+    }
 
-        //here starts gibberish
-        if (pageStart < 2) {
-            pageStart = 5;
-            pageEnd = pageStart + rowsPerPage;
-        }
+    //here starts gibberish
+    if (pageStart < 2) {
+    pageStart = 5;
+    pageEnd = pageStart + rowsPerPage;
+    }
 
     }*/
-
     public GroupMetaData getGmd() {
         return gmd;
     }
@@ -97,12 +96,13 @@ public class PageMetaData {
     }
 
     public PageMetaData getNext() {
-        LOG.info("getting next..");
+        LOG.info("\ngetting next..\n" + this.toString() + "\n\n\n");
         PageMetaData pmd = new PageMetaData();
         pmd.setGmd(gmd);
         pmd.setPageEnd(pageEnd + rowsPerPage);
         pmd.setPageStart(pageEnd + 1);
         pmd.setRowsPerPage(rowsPerPage);
+        LOG.info("\nreturning next..\n" + this.toString() + "\n\n\n");
         return pmd;
     }
 

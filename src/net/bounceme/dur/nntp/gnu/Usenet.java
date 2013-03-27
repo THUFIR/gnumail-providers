@@ -43,19 +43,24 @@ public enum Usenet {
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
-    public Page getPage(PageMetaData pmd) throws Exception {
-        Page p = new Page(pmd);
+    public Page getPage(PageMetaData pmd) {
+        Page p = null;
+
         try {
+            new Page(pmd);
             LOG.fine("fetching.." + pmd.getGmd().getGroup());
             folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
             folder.open(Folder.READ_ONLY);
             LOG.fine("..fetched " + folder);
             LOG.fine(pmd.toString());
             List<javax.mail.Message> messages = folder.getMessages(pmd);
+            for (Message m : messages) {
+                LOG.info(m.getSubject());
+            }
             p = new Page(pmd, messages);
             return p;
-        } catch (IOException | MessagingException ex) {
-            LOG.warning("some minor problem, probably" + ex);
+        } catch (Exception ex) {
+            LOG.fine("whatever\n" + ex.getMessage());
         }
         return p;
     }

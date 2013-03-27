@@ -74,7 +74,7 @@ public final class NNTPFolder extends Folder {
         groupMetaData = new GroupMetaData(name);
     }
 
-    public List<Message> getMessages(PageMetaData pageMetaData) throws IOException {
+    public List<Message> getMessages(PageMetaData pageMetaData) throws IOException, MessagingException {
         String group = pageMetaData.getGmd().getGroup();
         int min = pageMetaData.getPageStart();
         int max = pageMetaData.getPageEnd();
@@ -87,8 +87,11 @@ public final class NNTPFolder extends Folder {
             groupMetaData = new GroupMetaData(groupResponse);
             for (int i = min; i < max; i++) {
                 message = getMessageImpl(i);
+                if (message != null) {
+                    LOG.fine(message.getSubject() + "\n");
+                    messages.add(message);
+                }
             }
-            messages.add(message);
             messages.removeAll(Collections.singleton(null));
         }
         return messages;
@@ -191,7 +194,7 @@ public final class NNTPFolder extends Folder {
 
         articleCache = null;
         groupMetaData = new GroupMetaData();
-        groupMetaData=new GroupMetaData(groupMetaData,false);
+        groupMetaData = new GroupMetaData(groupMetaData, false);
         notifyConnectionListeners(ConnectionEvent.CLOSED);
     }
 
@@ -278,7 +281,7 @@ public final class NNTPFolder extends Folder {
             synchronized (ns.connection) {
                 // Ensure group selected
                 grpResp = ns.connection.group(groupMetaData.getGroup());
-                groupMetaData = new GroupMetaData(grpResp,true);
+                groupMetaData = new GroupMetaData(grpResp, true);
                 // Get article
                 m = getMessageImpl(msgnum - 1 + groupMetaData.getFirst());
                 // Cache store
