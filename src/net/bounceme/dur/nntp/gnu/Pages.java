@@ -16,7 +16,7 @@ public class Pages {
             LOG.fine("in loop");
             page = new Page(pmd);
             pmd = new PageMetaData(pmd, true);
-            LOG.fine(page.toString());
+            LOG.info(page.toString());
         }
     }
 
