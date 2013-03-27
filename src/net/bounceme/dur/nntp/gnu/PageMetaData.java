@@ -21,37 +21,6 @@ public class PageMetaData {
         //init();
     }
 
-    /*public final void init() {
-    pageEnd = Math.abs(pageEnd);
-    pageStart = Math.abs(pageStart);
-    rowsPerPage = Math.abs(rowsPerPage);
-
-    pageStart = pageStart > gmd.getFirst() ? gmd.getFirst() : pageStart;
-    pageEnd = pageEnd + rowsPerPage > gmd.getLast() ? gmd.getLast() : pageEnd;
-    if (pageEnd == gmd.getLast()) {
-    setLastPage(true);
-    }
-
-    if (lastPage) {
-    pageEnd = gmd.getLast();
-    pageStart = pageEnd - rowsPerPage;
-    }
-
-    pageEnd = Math.abs(pageEnd);
-    pageStart = Math.abs(pageStart);
-    rowsPerPage = Math.abs(rowsPerPage);
-
-    if (pageStart > pageEnd) {
-    pageStart = pageEnd;
-    }
-
-    //here starts gibberish
-    if (pageStart < 2) {
-    pageStart = 5;
-    pageEnd = pageStart + rowsPerPage;
-    }
-
-    }*/
     public GroupMetaData getGmd() {
         return gmd;
     }
