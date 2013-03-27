@@ -91,7 +91,7 @@ public final class NNTPFolder extends Folder {
                 try {
                     message = getMessageImpl(i);
                 } catch (IOException ex) {
-                    LOG.fine("whatever\n" + ex);
+                    LOG.fine("no worries\n" + ex);
                 }
                 if (message != null) {
                     LOG.fine(message.getSubject() + "\n");

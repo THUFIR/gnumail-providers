@@ -41,7 +41,7 @@ public class Page {
         this.pmd = pmd;
     }
 
-    private String printXref() {
+    private String printXref() throws MessagingException {
         LOG.fine("starting xref printing...\t" + messages.size());
         StringBuilder sb = new StringBuilder();
         String s = null;
@@ -49,16 +49,14 @@ public class Page {
         String subString = null;
         sb.append("messages to follow\n");
         for (Message message : messages) {
-            try {
-                LOG.fine(message.getSubject());
-            } catch (MessagingException ex) {
-            }
+
+            LOG.fine(message.getSubject());
+
             int i = messages.indexOf(message);
             Enumeration headers = null;
-            try {
-                headers = message.getAllHeaders();
-            } catch (MessagingException ex) {
-            }
+
+            headers = message.getAllHeaders();
+
             while (headers.hasMoreElements()) {
                 Object o = headers.nextElement();
                 Header header = (Header) o;
@@ -69,6 +67,8 @@ public class Page {
                     int xref = Integer.parseInt(subString);
                     s = "\n" + i + "\t\t" + xref;
                     sb.append(s);
+                    s = message.getSubject();
+                    sb.append("\t" + s);
                 }
             }
 
@@ -80,7 +80,11 @@ public class Page {
 
     public String toString() {
         String s = "\n---new page---\n" + pmd.toString() + "\n";
-        s = s + printXref();
+        try {
+            s = s + printXref();
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
+        }
         return s;
     }
 }
