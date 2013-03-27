@@ -42,7 +42,7 @@ public class Page {
     }
 
     private String printXref() {
-        LOG.info("starting xref printing...\t" + messages.size());
+        LOG.fine("starting xref printing...\t" + messages.size());
         StringBuilder sb = new StringBuilder();
         String s = null;
         String headerString = null;

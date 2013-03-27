@@ -50,12 +50,12 @@ public enum Usenet {
             LOG.fine("fetching.." + pmd.getGmd().getGroup());
             folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
             folder.open(Folder.READ_ONLY);
-            LOG.info("..fetched " + folder);
+            LOG.fine("..fetched " + folder);
             LOG.fine(pmd.toString());
             List<javax.mail.Message> messages = folder.getMessages(pmd);
-            LOG.severe("message size\t" + messages.size());
+            LOG.fine("message size\t" + messages.size());
             for (Message m : messages) {
-                LOG.info(m.getSubject());
+                LOG.fine(m.getSubject());
             }
             p = new Page(pmd, messages);
             return p;

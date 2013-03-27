@@ -83,7 +83,7 @@ public final class NNTPFolder extends Folder {
         Message message = null;
         NNTPStore ns = (NNTPStore) store;
         NNTPConnection connection = ns.connection;
-        LOG.info("connected..." + min + "\t" + max);
+        LOG.fine("connected..." + min + "\t" + max);
         synchronized (connection) {
             GroupResponse groupResponse = connection.group(group);
             groupMetaData = new GroupMetaData(groupResponse);
@@ -91,12 +91,12 @@ public final class NNTPFolder extends Folder {
                 try {
                     message = getMessageImpl(i);
                 } catch (IOException ex) {
-                    LOG.warning("whatever\n" + ex);
+                    LOG.fine("whatever\n" + ex);
                 }
-
-                LOG.info(message.getSubject() + "\n");
-                messages.add(message);
-
+                if (message != null) {
+                    LOG.fine(message.getSubject() + "\n");
+                    messages.add(message);
+                }
             }
             messages.removeAll(Collections.singleton(null));
         }
