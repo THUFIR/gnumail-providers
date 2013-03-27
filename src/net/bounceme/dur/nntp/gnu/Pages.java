@@ -14,8 +14,8 @@ public class Pages {
         Page page = null;
         for (int i = 0; i < 5; i++) {
             LOG.fine("in loop");
-            page = new Page(pmd);
-            pmd = new PageMetaData(pmd, true);
+            page = u.getPage(pmd);
+            pmd = new PageMetaData(page.getPmd(), true);
             LOG.info(page.toString());
         }
     }

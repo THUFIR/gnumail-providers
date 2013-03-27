@@ -63,6 +63,6 @@ public class GroupMetaData {
     }
 
     public String toString() {
-        return group + "\t\tisOpen\t\t" + open;
+        return "\n---gmd---\n" + group + "\t" + open + "\n";
     }
 }

@@ -75,6 +75,7 @@ public final class NNTPFolder extends Folder {
     }
 
     public List<Message> getMessages(PageMetaData pageMetaData) throws IOException, MessagingException {
+        LOG.fine("getting messages per\n" + pageMetaData);
         String group = pageMetaData.getGmd().getGroup();
         int min = pageMetaData.getPageStart();
         int max = pageMetaData.getPageEnd();
@@ -82,15 +83,20 @@ public final class NNTPFolder extends Folder {
         Message message = null;
         NNTPStore ns = (NNTPStore) store;
         NNTPConnection connection = ns.connection;
+        LOG.info("connected..." + min + "\t" + max);
         synchronized (connection) {
             GroupResponse groupResponse = connection.group(group);
             groupMetaData = new GroupMetaData(groupResponse);
             for (int i = min; i < max; i++) {
-                message = getMessageImpl(i);
-                if (message != null) {
-                    LOG.fine(message.getSubject() + "\n");
-                    messages.add(message);
+                try {
+                    message = getMessageImpl(i);
+                } catch (IOException ex) {
+                    LOG.warning("whatever\n" + ex);
                 }
+
+                LOG.info(message.getSubject() + "\n");
+                messages.add(message);
+
             }
             messages.removeAll(Collections.singleton(null));
         }

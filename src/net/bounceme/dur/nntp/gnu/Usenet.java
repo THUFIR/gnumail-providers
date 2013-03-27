@@ -45,15 +45,15 @@ public enum Usenet {
 
     public Page getPage(PageMetaData pmd) {
         Page p = null;
-
         try {
             new Page(pmd);
             LOG.fine("fetching.." + pmd.getGmd().getGroup());
             folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
             folder.open(Folder.READ_ONLY);
-            LOG.fine("..fetched " + folder);
+            LOG.info("..fetched " + folder);
             LOG.fine(pmd.toString());
             List<javax.mail.Message> messages = folder.getMessages(pmd);
+            LOG.severe("message size\t" + messages.size());
             for (Message m : messages) {
                 LOG.info(m.getSubject());
             }

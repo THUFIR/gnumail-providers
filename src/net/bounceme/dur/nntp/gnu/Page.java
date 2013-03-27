@@ -47,6 +47,7 @@ public class Page {
         String s = null;
         String headerString = null;
         String subString = null;
+        sb.append("messages to follow\n");
         for (Message message : messages) {
             try {
                 LOG.fine(message.getSubject());
@@ -79,7 +80,6 @@ public class Page {
 
     public String toString() {
         String s = "\n---new page---\n" + pmd.toString() + "\n";
-
         s = s + printXref();
         return s;
     }

@@ -71,6 +71,6 @@ public class PageMetaData {
     }
 
     public String toString() {
-        return "---pmd---\n" + pageStart + "\t\t" + pageEnd;
+        return "---pmd---\n" + gmd + pageStart + "\t\t" + pageEnd;
     }
 }
