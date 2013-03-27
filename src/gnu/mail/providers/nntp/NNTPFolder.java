@@ -55,7 +55,6 @@ import gnu.inet.nntp.NNTPException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Logger;
-import net.bounceme.dur.nntp.gnu.GroupMetaData;
 import net.bounceme.dur.nntp.gnu.PageMetaData;
 
 /**
@@ -192,7 +191,7 @@ public final class NNTPFolder extends Folder {
 
         articleCache = null;
         groupMetaData = new GroupMetaData();
-        groupMetaData.setOpen(false);
+        groupMetaData=new GroupMetaData(groupMetaData,false);
         notifyConnectionListeners(ConnectionEvent.CLOSED);
     }
 
@@ -205,7 +204,7 @@ public final class NNTPFolder extends Folder {
             NNTPStore ns = (NNTPStore) store;
             synchronized (ns.connection) {
                 grpResp = ns.connection.group(groupMetaData.getGroup());
-                groupMetaData = new GroupMetaData(grpResp);
+                groupMetaData = new GroupMetaData(grpResp, true);
             }
             return true;
         } catch (NNTPException e) {
@@ -233,7 +232,7 @@ public final class NNTPFolder extends Folder {
                 if (newGroupMetaData.getLast() > groupMetaData.getLast()) {
                     hasNew = true;
                 }
-                groupMetaData = new GroupMetaData(groupResponse);
+                groupMetaData = newGroupMetaData;
             }
             return hasNew;
         } catch (NNTPException e) {
@@ -263,7 +262,7 @@ public final class NNTPFolder extends Folder {
     public Message getMessage(int msgnum)
             throws MessagingException {
         if (!groupMetaData.isOpen()) {
-            //throw new IllegalStateException();
+            throw new IllegalStateException();
         }
 
         // Cache lookup
@@ -279,7 +278,7 @@ public final class NNTPFolder extends Folder {
             synchronized (ns.connection) {
                 // Ensure group selected
                 grpResp = ns.connection.group(groupMetaData.getGroup());
-                groupMetaData = new GroupMetaData(grpResp);
+                groupMetaData = new GroupMetaData(grpResp,true);
                 // Get article
                 m = getMessageImpl(msgnum - 1 + groupMetaData.getFirst());
                 // Cache store

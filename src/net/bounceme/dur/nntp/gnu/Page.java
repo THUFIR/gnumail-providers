@@ -1,5 +1,6 @@
 package net.bounceme.dur.nntp.gnu;
 
+import gnu.mail.providers.nntp.GroupMetaData;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -15,7 +16,7 @@ public class Page {
     private PageMetaData pmd = new PageMetaData();
 
     public Page() throws Exception {
-        GroupMetaData gmd = new GroupMetaData(getNewsgroup());
+        GroupMetaData gmd = new GroupMetaData();
         pmd = new PageMetaData(gmd);
     }
 
@@ -30,10 +31,6 @@ public class Page {
     public Page(PageMetaData pmd, List<Message> messages) throws MessagingException {
         this.pmd = pmd;
         this.messages = messages;
-    }
-
-    public String getNewsgroup() {
-        return "comp.lang.java.help";
     }
 
     public PageMetaData getPmd() {
