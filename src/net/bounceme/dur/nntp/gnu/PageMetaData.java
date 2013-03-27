@@ -13,19 +13,25 @@ public class PageMetaData {
     private boolean lastPage = false;
 
     public PageMetaData() {
-        //init();
     }
 
     PageMetaData(GroupMetaData gmd) {
         this.gmd = gmd;
-        //init();
+    }
+
+    public PageMetaData(PageMetaData previousPageMetaData, boolean next) {
+        gmd = previousPageMetaData.getGmd();
+        setRowsPerPage(previousPageMetaData.getRowsPerPage());
+        setPageStart(previousPageMetaData.getPageEnd() + 1);
+        setPageEnd(previousPageMetaData.getPageEnd() + rowsPerPage);
+        LOG.fine("\nreturning next..\n" + this.toString() + "\n\n\n");
     }
 
     public GroupMetaData getGmd() {
         return gmd;
     }
 
-    public void setGmd(GroupMetaData gmd) {
+    private void setGmd(GroupMetaData gmd) {
         this.gmd = gmd;
     }
 
@@ -34,7 +40,7 @@ public class PageMetaData {
         return pageStart;
     }
 
-    public void setPageStart(int pageStart) {
+    private void setPageStart(int pageStart) {
         this.pageStart = pageStart;
     }
 
@@ -44,7 +50,7 @@ public class PageMetaData {
         return pageEnd;
     }
 
-    public void setPageEnd(int pageEnd) {
+    private void setPageEnd(int pageEnd) {
         this.pageEnd = pageEnd;
     }
 
@@ -52,7 +58,7 @@ public class PageMetaData {
         return rowsPerPage;
     }
 
-    public void setRowsPerPage(int rowsPerPage) {
+    private void setRowsPerPage(int rowsPerPage) {
         this.rowsPerPage = rowsPerPage;
     }
 
@@ -60,19 +66,8 @@ public class PageMetaData {
         return lastPage;
     }
 
-    public void setLastPage(boolean lastPage) {
+    private void setLastPage(boolean lastPage) {
         this.lastPage = lastPage;
-    }
-
-    public PageMetaData getNext() {
-        LOG.info("\ngetting next..\n" + this.toString() + "\n\n\n");
-        PageMetaData pmd = new PageMetaData();
-        pmd.setGmd(gmd);
-        pmd.setPageEnd(pageEnd + rowsPerPage);
-        pmd.setPageStart(pageEnd + 1);
-        pmd.setRowsPerPage(rowsPerPage);
-        LOG.info("\nreturning next..\n" + this.toString() + "\n\n\n");
-        return pmd;
     }
 
     public String toString() {
