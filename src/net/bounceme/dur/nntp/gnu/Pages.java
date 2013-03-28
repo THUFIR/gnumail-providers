@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 public class Pages {
 
     private final static Logger LOG = Logger.getLogger(Pages.class.getName());
-    Usenet u = Usenet.INSTANCE;
+    private Usenet u = Usenet.INSTANCE;
 
     public Pages() throws Exception {
         LOG.fine("in constructor");
@@ -20,7 +20,7 @@ public class Pages {
         }
     }
 
-    public static void main(String... args) throws Exception {
-        new Pages();
-    }
+    //public static void main(String... args) throws Exception {
+    //    new Pages();
+    //}
 }

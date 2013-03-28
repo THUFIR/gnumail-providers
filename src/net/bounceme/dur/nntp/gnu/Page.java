@@ -68,10 +68,9 @@ public class Page {
                     s = "\n" + i + "\t\t" + xref;
                     sb.append(s);
                     s = message.getSubject();
-                    sb.append("\t" + s);
+                    sb.append("\t").append(s);
                 }
             }
-
             LOG.fine("\n\n\n**********************\n\n\n");
         }
         LOG.fine(sb.toString());
