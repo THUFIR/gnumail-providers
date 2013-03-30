@@ -43,7 +43,7 @@ public enum Usenet {
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
-    public Page getPage(PageMetaData pmd) {
+    public Page getPage(PMD pmd) {
         Page p = null;
         try {
             new Page(pmd);

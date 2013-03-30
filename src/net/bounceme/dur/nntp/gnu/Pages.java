@@ -10,12 +10,12 @@ public class Pages {
 
     public Pages() throws Exception {
         LOG.fine("in constructor");
-        PageMetaData pmd = new PageMetaData(new GroupMetaData("comp.lang.java.help")); //dummy
+        PMD pmd = new PMD(new GroupMetaData("comp.lang.java.help")); //dummy
         Page page = null;
         for (int i = 0; i < 5; i++) {
             LOG.fine("in loop");
             page = u.getPage(pmd);
-            pmd = new PageMetaData(page.getPmd(), true);
+            pmd = new PMD(page.getPmd(), true);
             LOG.info(page.toString());
         }
     }

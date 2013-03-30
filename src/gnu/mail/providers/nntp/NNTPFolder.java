@@ -55,7 +55,7 @@ import gnu.inet.nntp.NNTPException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Logger;
-import net.bounceme.dur.nntp.gnu.PageMetaData;
+import net.bounceme.dur.nntp.gnu.PMD;
 
 /**
  * A JavaMail folder delegate for an NNTP newsgroup.
@@ -74,7 +74,7 @@ public final class NNTPFolder extends Folder {
         groupMetaData = new GroupMetaData(name);
     }
 
-    public List<Message> getMessages(PageMetaData pageMetaData) throws IOException, MessagingException {
+    public List<Message> getMessages(PMD pageMetaData) throws IOException, MessagingException {
         LOG.fine("getting messages per\n" + pageMetaData);
         String group = pageMetaData.getGmd().getGroup();
         int min = pageMetaData.getPageStart();

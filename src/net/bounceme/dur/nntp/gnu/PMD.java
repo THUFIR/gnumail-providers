@@ -3,23 +3,23 @@ package net.bounceme.dur.nntp.gnu;
 import gnu.mail.providers.nntp.GroupMetaData;
 import java.util.logging.Logger;
 
-public class PageMetaData {
+public class PMD {
 
-    private static final Logger LOG = Logger.getLogger(PageMetaData.class.getName());
+    private static final Logger LOG = Logger.getLogger(PMD.class.getName());
     private GroupMetaData gmd = new GroupMetaData();
     private int pageStart = 0;
     private int pageEnd = 0;
     private int rowsPerPage = 5;
     private boolean lastPage = false;
 
-    public PageMetaData() {
+    public PMD() {
     }
 
-    PageMetaData(GroupMetaData gmd) {
+    PMD(GroupMetaData gmd) {
         this.gmd = gmd;
     }
 
-    public PageMetaData(PageMetaData previousPageMetaData, boolean next) {
+    public PMD(PMD previousPageMetaData, boolean next) {
         gmd = previousPageMetaData.getGmd();
         setRowsPerPage(previousPageMetaData.getRowsPerPage());
         setPageStart(previousPageMetaData.getPageEnd() + 1);

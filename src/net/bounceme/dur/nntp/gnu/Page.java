@@ -13,31 +13,31 @@ public class Page {
 
     private final static Logger LOG = Logger.getLogger(Page.class.getName());
     private List<Message> messages = new ArrayList<>();
-    private PageMetaData pmd = new PageMetaData();
+    private PMD pmd = new PMD();
 
     public Page() throws Exception {
         GroupMetaData gmd = new GroupMetaData();
-        pmd = new PageMetaData(gmd);
+        pmd = new PMD(gmd);
     }
 
     public Page(GroupMetaData gmd) throws Exception {
-        pmd = new PageMetaData(gmd);
+        pmd = new PMD(gmd);
     }
 
-    public Page(PageMetaData pmd) throws Exception {
+    public Page(PMD pmd) throws Exception {
         this.pmd = pmd;
     }
 
-    public Page(PageMetaData pmd, List<Message> messages) throws MessagingException {
+    public Page(PMD pmd, List<Message> messages) throws MessagingException {
         this.pmd = pmd;
         this.messages = messages;
     }
 
-    public PageMetaData getPmd() {
+    public PMD getPmd() {
         return pmd;
     }
 
-    public void setPmd(PageMetaData pmd) {
+    public void setPmd(PMD pmd) {
         this.pmd = pmd;
     }
 
