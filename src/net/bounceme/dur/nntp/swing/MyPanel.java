@@ -10,14 +10,16 @@ import net.bounceme.dur.nntp.gnu.Usenet;
 public class MyPanel extends JScrollPane {
 
     private static final Logger LOG = Logger.getLogger(MyPanel.class.getName());
-    private JList jList;
-    private DefaultListModel defaultListModel;
+    private static final long serialVersionUID = 1L;
+    private JList<String> jList = new JList<>();
+    private DefaultListModel<String> dlm = new DefaultListModel<>();
     private Usenet u = Usenet.INSTANCE;
-    private Page page;
+    private Page page=new Page();
 
-    public MyPanel() {
-        page = u.getPage(new Page().getPmd()); //uncaught exception
-        jList = new JList(defaultListModel); // null, need to initialize
+    @SuppressWarnings("unchecked")
+    public MyPanel() throws Exception {
+        page = u.getPage(page.getPmd()); //uncaught exception
+        jList = new JList<>(dlm); // null, need to initialize
         initComponents();
     }
 
