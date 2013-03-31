@@ -8,9 +8,7 @@ public class Driver {
 
     private static final Logger LOG = Logger.getLogger(Driver.class.getName());
 
-    private static void createAndShowGUI() throws Exception {
-
-
+    private static void createAndShowGUI()  {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
@@ -21,13 +19,11 @@ public class Driver {
 
         JTabbedPane tabs = new JTabbedPane();
 
-//        tabs.add(n);
-//        tabs.add(a);
+        MyPanel myPanel = new MyPanel();
+        tabs.add(myPanel);
         frame.add(tabs);
 
         frame.pack();
-
-
         frame.setVisible(true);
     }
 
@@ -35,11 +31,7 @@ public class Driver {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                try {
-                    createAndShowGUI();
-                } catch (Exception ex) {
-                    LOG.warning("hmm\n\n" + ex);
-                }
+                createAndShowGUI();
             }
         });
     }
