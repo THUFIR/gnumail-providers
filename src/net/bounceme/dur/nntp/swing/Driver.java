@@ -8,19 +8,26 @@ public class Driver {
 
     private static final Logger LOG = Logger.getLogger(Driver.class.getName());
 
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("HelloWorldSwing");
+    private static void createAndShowGUI() throws Exception {
+
+
+        JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(true);
+        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        frame.setMaximizedBounds(e.getMaximumWindowBounds());
+        frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        frame.setLayout(new BorderLayout());
 
-        Dimension d = new Dimension(400, 40);
-        JLabel label = new JLabel("Hello World");
-        frame.getContentPane().add(label);
+        JTabbedPane tabs = new JTabbedPane();
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = screenSize.height;
-        int width = screenSize.width;
-        frame.setSize(height, width + 50);
-        LOG.fine(height + "\t\t\t" + width);
+//        tabs.add(n);
+//        tabs.add(a);
+        frame.add(tabs);
+
+        frame.pack();
+
+
         frame.setVisible(true);
     }
 
@@ -28,7 +35,11 @@ public class Driver {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                createAndShowGUI();
+                try {
+                    createAndShowGUI();
+                } catch (Exception ex) {
+                    LOG.warning("hmm\n\n" + ex);
+                }
             }
         });
     }

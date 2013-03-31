@@ -26,9 +26,12 @@ public class MyPanel extends JScrollPane {
             dlm.addElement(m);
         }
         jList = new JList<>(dlm);
+        this.add(jList);
         initComponents();
     }
 
     private void initComponents() {
+        this.setSize(300, 100);
+        this.setVisible(true);
     }
 }
