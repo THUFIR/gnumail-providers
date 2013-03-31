@@ -9,13 +9,14 @@ public class Driver {
 
     private static final Logger LOG = Logger.getLogger(Driver.class.getName());
 
-    private static void createAndShowGUI() throws MessagingException  {
+    private static void createAndShowGUI() throws MessagingException {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
-        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        frame.setMaximizedBounds(e.getMaximumWindowBounds());
-        frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        //GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        //frame.setMaximizedBounds(e.getMaximumWindowBounds());
+        //frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        frame.setSize(500, 500);
         frame.setLayout(new BorderLayout());
 
         JTabbedPane tabs = new JTabbedPane();

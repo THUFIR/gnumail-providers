@@ -23,6 +23,11 @@ public class ArticlesPanel extends JPanel {
 
     public ArticlesPanel() throws MessagingException {
 
+
+        dlm = new DefaultListModel<>();
+        for (int i = 1; i < 9; i++) {
+            dlm.addElement("item\t\t" + i);
+        }
         initComponents();
     }
 
@@ -30,10 +35,6 @@ public class ArticlesPanel extends JPanel {
     private void initComponents() {
         setLayout(new java.awt.BorderLayout());
 
-        dlm = new DefaultListModel<>();
-        for (int i = 1; i < 9; i++) {
-            dlm.addElement("item\t\t" + i);
-        }
 
         jList.setModel(dlm);
         jList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
