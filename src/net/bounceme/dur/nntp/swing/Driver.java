@@ -9,7 +9,7 @@ public class Driver {
 
     private static final Logger LOG = Logger.getLogger(Driver.class.getName());
 
-    private static void createAndShowGUI() throws MessagingException {
+    private static void createAndShowGUI() throws Exception {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
@@ -35,7 +35,7 @@ public class Driver {
             public void run() {
                 try {
                     createAndShowGUI();
-                } catch (MessagingException ex) {
+                } catch (Exception ex) {
                     LOG.warning(ex.getLocalizedMessage());
                 }
             }

@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import net.bounceme.dur.nntp.gnu.Page;
 
 public class ArticlesPanel extends JPanel {
 
@@ -21,12 +22,15 @@ public class ArticlesPanel extends JPanel {
     private JScrollPane scrollPane = new JScrollPane();
     private DefaultListModel<String> dlm;
     private JButton next = new JButton("next");
+    private Page p;
 
-    public ArticlesPanel() throws MessagingException {
+    public ArticlesPanel() throws Exception {
         dlm = new DefaultListModel<>();
         for (int i = 1; i < 9; i++) {
             dlm.addElement("item\t\t" + i);
         }
+
+        p = new Page();
 
         initComponents();
     }
