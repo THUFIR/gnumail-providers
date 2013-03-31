@@ -3,6 +3,8 @@ package net.bounceme.dur.nntp.swing;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.swing.DefaultListModel;
@@ -26,6 +28,14 @@ public class ArticlesPanel extends JPanel {
             dlm.addElement("item\t\t" + i);
         }
 
+        initComponents();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initComponents() {
+        setLayout(new java.awt.BorderLayout());
+
+
         next.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -33,14 +43,6 @@ public class ArticlesPanel extends JPanel {
             }
         });
 
-
-
-        initComponents();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void initComponents() {
-        setLayout(new java.awt.BorderLayout());
 
 
         jList.setModel(dlm);
@@ -67,11 +69,11 @@ public class ArticlesPanel extends JPanel {
         this.setVisible(true);
     }
 
-    private void keyReleases(java.awt.event.KeyEvent evt) {
+    private void keyReleases(KeyEvent evt) {
         itemSelected();
     }
 
-    private void mouseReleases(java.awt.event.MouseEvent evt) {
+    private void mouseReleases(MouseEvent evt) {
         itemSelected();
     }
 
