@@ -1,5 +1,8 @@
 package net.bounceme.dur.nntp.swing;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.swing.DefaultListModel;
@@ -18,11 +21,20 @@ public class ArticlesPanel extends JPanel {
     private JButton next = new JButton("next");
 
     public ArticlesPanel() throws MessagingException {
-
         dlm = new DefaultListModel<>();
         for (int i = 1; i < 9; i++) {
             dlm.addElement("item\t\t" + i);
         }
+
+        next.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                click(e);
+            }
+        });
+
+
+
         initComponents();
     }
 
@@ -47,10 +59,11 @@ public class ArticlesPanel extends JPanel {
         });
 
         scrollPane.setViewportView(jList);
-        add(scrollPane, java.awt.BorderLayout.CENTER);
-        add(next, java.awt.BorderLayout.SOUTH);
+        add(scrollPane, BorderLayout.CENTER);
+        add(next, BorderLayout.SOUTH);
 
         this.setSize(300, 100);
+        scrollPane.setVisible(true);
         this.setVisible(true);
     }
 
@@ -64,5 +77,9 @@ public class ArticlesPanel extends JPanel {
 
     private void itemSelected() {
         LOG.info("selected\t\t" + jList.getSelectedValue());
+    }
+
+    private void click(ActionEvent e) {
+        LOG.info("You clicked the button");
     }
 }
