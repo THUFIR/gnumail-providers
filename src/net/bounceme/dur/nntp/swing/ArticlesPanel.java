@@ -19,19 +19,10 @@ public class ArticlesPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private JList<String> jList = new JList<>();
     private JScrollPane scrollPane = new JScrollPane();
-    private Page page;
     private DefaultListModel<String> dlm;
 
     public ArticlesPanel() throws MessagingException {
-        Usenet u = Usenet.INSTANCE;
-        GroupMetaData gmd = new GroupMetaData();
-        PMD pmd = new PMD(gmd);
-        LOG.info(pmd.toString());
-        page = u.getPage(pmd);
-        List<Message> messages = page.getMessages();
-        for (Message m : messages) {
-            dlm.addElement(m.getSubject());
-        }
+
         initComponents();
     }
 
@@ -55,7 +46,7 @@ public class ArticlesPanel extends JPanel {
         jList.addKeyListener(new java.awt.event.KeyAdapter() {
 
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                keyReleased(evt);
+                keyReleases(evt);
             }
         });
 
@@ -66,7 +57,7 @@ public class ArticlesPanel extends JPanel {
         this.setVisible(true);
     }
 
-    private void keyReleased(java.awt.event.KeyEvent evt) {
+    private void keyReleases(java.awt.event.KeyEvent evt) {
         itemSelected();
     }
 
