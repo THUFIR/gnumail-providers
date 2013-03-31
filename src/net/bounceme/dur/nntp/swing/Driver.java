@@ -1,14 +1,12 @@
 package net.bounceme.dur.nntp.swing;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.logging.Logger;
 import javax.swing.*;
 import java.awt.*;
 
-public class HelloWorldSwing {
+public class Driver {
 
-    private static final Logger LOG = Logger.getLogger(HelloWorldSwing.class.getName());
+    private static final Logger LOG = Logger.getLogger(Driver.class.getName());
 
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("HelloWorldSwing");
@@ -21,13 +19,14 @@ public class HelloWorldSwing {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height;
         int width = screenSize.width;
-        frame.setSize(height, width);
-        LOG.info(height + "\t\t\t" + width);
+        frame.setSize(height, width + 50);
+        LOG.fine(height + "\t\t\t" + width);
         frame.setVisible(true);
     }
 
     public static void main(String... args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
             public void run() {
                 createAndShowGUI();
             }

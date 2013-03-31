@@ -2,6 +2,7 @@ package net.bounceme.dur.nntp.gnu;
 
 import gnu.mail.providers.nntp.GroupMetaData;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
@@ -39,6 +40,10 @@ public class Page {
 
     public void setPmd(PMD pmd) {
         this.pmd = pmd;
+    }
+
+    public List<Message> getMessages() {
+        return Collections.unmodifiableList(messages);
     }
 
     private String printXref() throws MessagingException {
