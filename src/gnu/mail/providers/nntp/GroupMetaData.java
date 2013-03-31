@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 public class GroupMetaData {
 
     private static final Logger LOG = Logger.getLogger(GroupMetaData.class.getName());
-    private String group = "no.group.here.null.null.null";
+    private String group = "comp.lang.java.help"; //default
     private int count = 0;
     private int first = 0;
     private int last = 0;

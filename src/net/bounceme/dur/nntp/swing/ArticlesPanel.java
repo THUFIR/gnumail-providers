@@ -1,19 +1,37 @@
 package net.bounceme.dur.nntp.swing;
 
+import gnu.mail.providers.nntp.GroupMetaData;
+import java.util.List;
 import java.util.logging.Logger;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import net.bounceme.dur.nntp.gnu.PMD;
+import net.bounceme.dur.nntp.gnu.Page;
+import net.bounceme.dur.nntp.gnu.Usenet;
 
-public class MyPanel extends JPanel {
+public class ArticlesPanel extends JPanel {
 
-    private static final Logger LOG = Logger.getLogger(MyPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ArticlesPanel.class.getName());
     private static final long serialVersionUID = 1L;
     private JList<String> jList = new JList<>();
     private JScrollPane scrollPane = new JScrollPane();
+    private Page page;
+    private DefaultListModel<String> dlm;
 
-    public MyPanel() {
+    public ArticlesPanel() throws MessagingException {
+        Usenet u = Usenet.INSTANCE;
+        GroupMetaData gmd = new GroupMetaData();
+        PMD pmd = new PMD(gmd);
+        LOG.info(pmd.toString());
+        page = u.getPage(pmd);
+        List<Message> messages = page.getMessages();
+        for (Message m : messages) {
+            dlm.addElement(m.getSubject());
+        }
         initComponents();
     }
 
@@ -21,7 +39,7 @@ public class MyPanel extends JPanel {
     private void initComponents() {
         setLayout(new java.awt.BorderLayout());
 
-        DefaultListModel<String> dlm = new DefaultListModel<>();
+        dlm = new DefaultListModel<>();
         for (int i = 1; i < 9; i++) {
             dlm.addElement("item\t\t" + i);
         }

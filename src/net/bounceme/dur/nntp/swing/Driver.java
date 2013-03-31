@@ -1,6 +1,7 @@
 package net.bounceme.dur.nntp.swing;
 
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,7 +9,7 @@ public class Driver {
 
     private static final Logger LOG = Logger.getLogger(Driver.class.getName());
 
-    private static void createAndShowGUI()  {
+    private static void createAndShowGUI() throws MessagingException  {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
@@ -19,7 +20,7 @@ public class Driver {
 
         JTabbedPane tabs = new JTabbedPane();
 
-        MyPanel myPanel = new MyPanel();
+        ArticlesPanel myPanel = new ArticlesPanel();
         tabs.add(myPanel);
         frame.add(tabs);
 
@@ -31,7 +32,11 @@ public class Driver {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                createAndShowGUI();
+                try {
+                    createAndShowGUI();
+                } catch (MessagingException ex) {
+                    LOG.warning(ex.getLocalizedMessage());
+                }
             }
         });
     }

@@ -15,7 +15,7 @@ public class PMD {
     public PMD() {
     }
 
-    PMD(GroupMetaData gmd) {
+    public PMD(GroupMetaData gmd) {
         this.gmd = gmd;
     }
 
