@@ -24,10 +24,10 @@ public class ArticlesPanel extends JPanel {
     private static final long serialVersionUID = 1L;
     private JList<String> jList = new JList<>();
     private JScrollPane scrollPane = new JScrollPane();
-    private DefaultListModel<String> dlm;
+    private DefaultListModel<String> defaultListModel;
     private JButton next = new JButton("next");
     private Page page;
-    private Usenet usenetConnection = Usenet.INSTANCE;
+    private Usenet usenetConnection = Usenet.INSTANCE;  //ensures correct connection
     private PageMetaData pageMetaData = new PageMetaData();
 
     public ArticlesPanel() {
@@ -46,7 +46,7 @@ public class ArticlesPanel extends JPanel {
             }
         });
 
-        jList.setModel(dlm);
+        jList.setModel(defaultListModel);
         jList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -62,7 +62,7 @@ public class ArticlesPanel extends JPanel {
         });
 
         scrollPane.setViewportView(jList);
-        add(scrollPane, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.WEST);
         add(next, BorderLayout.SOUTH);
 
         this.setSize(300, 100);
@@ -84,17 +84,17 @@ public class ArticlesPanel extends JPanel {
 
     private void nextPage(ActionEvent e) {
         page = usenetConnection.getPage(pageMetaData);  //first time, default
-        pageMetaData = new PageMetaData(page.getPmd(), true); //get next is true
+        pageMetaData = new PageMetaData(page.getPageMetaData(), true); //get next is true
         List<Message> messages = page.getMessages(); //breaks MVC?
-        dlm = new DefaultListModel<>();  //clear or new?
+        defaultListModel = new DefaultListModel<>();  //clear or new?
         for (Message m : messages) {
             try {
-                dlm.addElement(m.getSubject());
+                defaultListModel.addElement(m.getSubject());
             } catch (MessagingException ex) {
                 LOG.warning("bad message\n" + m.toString() + "\n" + ex);
             }
         }
-        jList.setModel(dlm);
+        jList.setModel(defaultListModel);
         LOG.fine(page.toString());
     }
 }

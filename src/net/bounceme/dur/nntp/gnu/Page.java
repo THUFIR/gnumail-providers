@@ -14,33 +14,26 @@ public class Page {
 
     private final static Logger LOG = Logger.getLogger(Page.class.getName());
     private List<Message> messages = new ArrayList<>();
-    private PageMetaData pmd = new PageMetaData();
+     private PageMetaData pageMetaData = new PageMetaData();
 
     public Page() throws Exception {
         GroupMetaData gmd = new GroupMetaData();
-        pmd = new PageMetaData(gmd);
+        pageMetaData = new PageMetaData(gmd);
     }
 
     public Page(GroupMetaData gmd) throws Exception {
-        pmd = new PageMetaData(gmd);
+        pageMetaData = new PageMetaData(gmd);
     }
 
     public Page(PageMetaData pmd) throws Exception {
-        this.pmd = pmd;
+        this.pageMetaData = pmd;
     }
 
     public Page(PageMetaData pmd, List<Message> messages) throws MessagingException {
-        this.pmd = pmd;
+        this.pageMetaData = pmd;
         this.messages = messages;
     }
 
-    public PageMetaData getPmd() {
-        return pmd;
-    }
-
-    public void setPmd(PageMetaData pmd) {
-        this.pmd = pmd;
-    }
 
     public List<Message> getMessages() {
         return Collections.unmodifiableList(messages);
@@ -83,12 +76,20 @@ public class Page {
     }
 
     public String toString() {
-        String s = "\n---new page---\n" + pmd.toString() + "\n";
+        String s = "\n---new page---\n" + getPageMetaData().toString() + "\n";
         try {
             s = s + printXref();
         } catch (MessagingException ex) {
             ex.printStackTrace();
         }
         return s;
+    }
+
+    public PageMetaData getPageMetaData() {
+        return pageMetaData;
+    }
+
+    public void setPageMetaData(PageMetaData pageMetaData) {
+        this.pageMetaData = pageMetaData;
     }
 }
