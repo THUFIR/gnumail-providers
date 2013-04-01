@@ -5,7 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.logging.Logger;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -25,11 +28,9 @@ public class ArticlesPanel extends JPanel {
     private JButton next = new JButton("next");
     private Page page;
     private Usenet u = Usenet.INSTANCE;
+    private PMD pmd = new PMD();
 
     public ArticlesPanel() {
-
-        PMD pmd = new PMD();
-
         dlm = new DefaultListModel<>();
         for (int i = 1; i < 9; i++) {
             dlm.addElement("item\t\t" + i);
@@ -47,8 +48,6 @@ public class ArticlesPanel extends JPanel {
             pmd = new PMD(page.getPmd(), true);
             LOG.info(page.toString());
         }
-
-
         initComponents();
     }
 
@@ -60,7 +59,7 @@ public class ArticlesPanel extends JPanel {
         next.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                click(e);
+                nextPage(e);
             }
         });
 
@@ -102,7 +101,19 @@ public class ArticlesPanel extends JPanel {
         LOG.info("selected\t\t" + jList.getSelectedValue());
     }
 
-    private void click(ActionEvent e) {
-        LOG.info("You clicked the button");
+    private void nextPage(ActionEvent e) {
+        page = u.getPage(pmd);
+        pmd = new PMD(page.getPmd(), true);
+        List<Message> messages = page.getMessages();
+        dlm = new DefaultListModel<>();
+        for (Message m : messages) {
+            try {
+                dlm.addElement(m.getSubject());
+            } catch (MessagingException ex) {
+                LOG.warning("no message\n" + ex);
+            }
+        }
+        jList.setModel(dlm);
+        LOG.info(page.toString());
     }
 }
