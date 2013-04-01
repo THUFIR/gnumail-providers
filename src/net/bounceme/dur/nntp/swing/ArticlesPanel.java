@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import net.bounceme.dur.nntp.gnu.PMD;
+import net.bounceme.dur.nntp.gnu.PageMetaData;
 import net.bounceme.dur.nntp.gnu.Page;
 import net.bounceme.dur.nntp.gnu.Usenet;
 
@@ -27,43 +27,24 @@ public class ArticlesPanel extends JPanel {
     private DefaultListModel<String> dlm;
     private JButton next = new JButton("next");
     private Page page;
-    private Usenet u = Usenet.INSTANCE;
-    private PMD pmd = new PMD();
+    private Usenet usenetConnection = Usenet.INSTANCE;
+    private PageMetaData pageMetaData = new PageMetaData();
 
     public ArticlesPanel() {
-        dlm = new DefaultListModel<>();
-        for (int i = 1; i < 9; i++) {
-            dlm.addElement("item\t\t" + i);
-        }
-        try {
-            page = new Page();
-            pmd = page.getPmd();
-        } catch (Exception ex) {
-            LOG.warning("no page\n" + ex);
-        }
-
-        for (int i = 0; i < 5; i++) {
-            LOG.fine("in loop");
-            page = u.getPage(pmd);
-            pmd = new PMD(page.getPmd(), true);
-            LOG.info(page.toString());
-        }
+        nextPage(null);
+        nextPage(null);  //only because default page starts at zero
         initComponents();
     }
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
         setLayout(new java.awt.BorderLayout());
-
-
         next.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 nextPage(e);
             }
         });
-
-
 
         jList.setModel(dlm);
         jList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -102,18 +83,18 @@ public class ArticlesPanel extends JPanel {
     }
 
     private void nextPage(ActionEvent e) {
-        page = u.getPage(pmd);
-        pmd = new PMD(page.getPmd(), true);
-        List<Message> messages = page.getMessages();
-        dlm = new DefaultListModel<>();
+        page = usenetConnection.getPage(pageMetaData);  //first time, default
+        pageMetaData = new PageMetaData(page.getPmd(), true); //get next is true
+        List<Message> messages = page.getMessages(); //breaks MVC?
+        dlm = new DefaultListModel<>();  //clear or new?
         for (Message m : messages) {
             try {
                 dlm.addElement(m.getSubject());
             } catch (MessagingException ex) {
-                LOG.warning("no message\n" + ex);
+                LOG.warning("bad message\n" + m.toString() + "\n" + ex);
             }
         }
         jList.setModel(dlm);
-        LOG.info(page.toString());
+        LOG.fine(page.toString());
     }
 }
