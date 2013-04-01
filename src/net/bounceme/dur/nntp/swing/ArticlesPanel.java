@@ -6,13 +6,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.logging.Logger;
-import javax.mail.MessagingException;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import net.bounceme.dur.nntp.gnu.PMD;
 import net.bounceme.dur.nntp.gnu.Page;
+import net.bounceme.dur.nntp.gnu.Usenet;
 
 public class ArticlesPanel extends JPanel {
 
@@ -22,15 +23,31 @@ public class ArticlesPanel extends JPanel {
     private JScrollPane scrollPane = new JScrollPane();
     private DefaultListModel<String> dlm;
     private JButton next = new JButton("next");
-    private Page p;
+    private Page page;
+    private Usenet u = Usenet.INSTANCE;
 
-    public ArticlesPanel() throws Exception {
+    public ArticlesPanel() {
+
+        PMD pmd = new PMD();
+
         dlm = new DefaultListModel<>();
         for (int i = 1; i < 9; i++) {
             dlm.addElement("item\t\t" + i);
         }
+        try {
+            page = new Page();
+            pmd = page.getPmd();
+        } catch (Exception ex) {
+            LOG.warning("no page\n" + ex);
+        }
 
-        p = new Page();
+        for (int i = 0; i < 5; i++) {
+            LOG.fine("in loop");
+            page = u.getPage(pmd);
+            pmd = new PMD(page.getPmd(), true);
+            LOG.info(page.toString());
+        }
+
 
         initComponents();
     }

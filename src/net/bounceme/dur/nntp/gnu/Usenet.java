@@ -46,21 +46,29 @@ public enum Usenet {
     public Page getPage(PMD pmd) {
         Page p = null;
         try {
-            new Page(pmd);
-            LOG.fine("fetching.." + pmd.getGmd().getGroup());
-            folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
-            folder.open(Folder.READ_ONLY);
-            LOG.fine("..fetched " + folder);
-            LOG.fine(pmd.toString());
-            List<javax.mail.Message> messages = folder.getMessages(pmd);
-            LOG.fine("message size\t" + messages.size());
-            for (Message m : messages) {
-                LOG.fine(m.getSubject());
-            }
-            p = new Page(pmd, messages);
-            return p;
+            p = new Page(pmd);
         } catch (Exception ex) {
-            LOG.fine("whatever\n" + ex.getMessage());
+            LOG.warning("no page\n" + ex);
+        }
+        LOG.fine("fetching.." + pmd.getGmd().getGroup());
+        try {
+            folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
+        } catch (MessagingException ex) {
+            LOG.warning("cannot load root folder\n" + ex);
+        }
+        try {
+            folder.open(Folder.READ_ONLY);
+        } catch (MessagingException ex) {
+            LOG.warning("cannot open folder\n" + ex);
+        }
+        LOG.fine("..fetched " + folder);
+        LOG.fine(pmd.toString());
+        List<javax.mail.Message> messages = folder.getMessages(pmd);
+        LOG.fine("message size\t" + messages.size());
+        try {
+            p = new Page(pmd, messages);
+        } catch (MessagingException ex) {
+            LOG.warning("no page\n" + ex);
         }
         return p;
     }

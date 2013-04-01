@@ -1,29 +1,29 @@
 /*
-* NNTPFolder.java
-* Copyright(C) 2002 Chris Burdess <dog@gnu.org>
-*
-* This file is part of GNU JavaMail, a library.
-*
-* GNU JavaMail is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-*(at your option) any later version.
-*
-* GNU JavaMail is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this library; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-*
-* As a special exception, if you link this library with other files to
-* produce an executable, this library does not by itself cause the
-* resulting executable to be covered by the GNU General Public License.
-* This exception does not however invalidate any other reasons why the
-* executable file might be covered by the GNU General Public License.
-*/
+ * NNTPFolder.java
+ * Copyright(C) 2002 Chris Burdess <dog@gnu.org>
+ *
+ * This file is part of GNU JavaMail, a library.
+ *
+ * GNU JavaMail is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ *(at your option) any later version.
+ *
+ * GNU JavaMail is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ *
+ * As a special exception, if you link this library with other files to
+ * produce an executable, this library does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * This exception does not however invalidate any other reasons why the
+ * executable file might be covered by the GNU General Public License.
+ */
 package gnu.mail.providers.nntp;
 
 import java.io.ByteArrayInputStream;
@@ -58,11 +58,11 @@ import java.util.logging.Logger;
 import net.bounceme.dur.nntp.gnu.PMD;
 
 /**
-* A JavaMail folder delegate for an NNTP newsgroup.
-*
-* @author <a href='mailto:dog@gnu.org'>Chris Burdess</a>
-* @version 2.0
-*/
+ * A JavaMail folder delegate for an NNTP newsgroup.
+ *
+ * @author <a href='mailto:dog@gnu.org'>Chris Burdess</a>
+ * @version 2.0
+ */
 public final class NNTPFolder extends Folder {
 
     private static final Logger LOG = Logger.getLogger(NNTPFolder.class.getName());
@@ -74,7 +74,7 @@ public final class NNTPFolder extends Folder {
         groupMetaData = new GroupMetaData(name);
     }
 
-    public List<Message> getMessages(PMD pageMetaData) throws IOException, MessagingException {
+    public List<Message> getMessages(PMD pageMetaData) {
         LOG.fine("getting messages per\n" + pageMetaData);
         String group = pageMetaData.getGmd().getGroup();
         int min = pageMetaData.getPageStart();
@@ -85,7 +85,12 @@ public final class NNTPFolder extends Folder {
         NNTPConnection connection = ns.connection;
         LOG.fine("connected..." + min + "\t" + max);
         synchronized (connection) {
-            GroupResponse groupResponse = connection.group(group);
+            GroupResponse groupResponse = null;
+            try {
+                groupResponse = connection.group(group);
+            } catch (IOException ex) {
+                LOG.warning("no groupResponse\n" + ex);
+            }
             groupMetaData = new GroupMetaData(groupResponse);
             for (int i = min; i < max; i++) {
                 try {
@@ -94,7 +99,7 @@ public final class NNTPFolder extends Folder {
                     LOG.fine("no worries\n" + ex);
                 }
                 if (message != null) {
-                    LOG.fine(message.getSubject() + "\n");
+                    //LOG.fine(message.getSubject() + "\n");
                     messages.add(message);
                 }
             }
@@ -104,23 +109,23 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* Returns the name of the newsgroup, e.g. <code>alt.test</code>.
-*/
+     * Returns the name of the newsgroup, e.g. <code>alt.test</code>.
+     */
     public String getName() {
         return groupMetaData.getGroup();
     }
 
     /**
-* @see #getName
-*/
+     * @see #getName
+     */
     public String getFullName() {
         return groupMetaData.getGroup();
     }
 
     /**
-* This implementation uses a flat namespace, so the parent of any
-* NNTPFolder is the NNTP root folder.
-*/
+     * This implementation uses a flat namespace, so the parent of any
+     * NNTPFolder is the NNTP root folder.
+     */
     public Folder getParent()
             throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
@@ -128,9 +133,9 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* Returns the type of this folder.
-* This folder type only holds messages.
-*/
+     * Returns the type of this folder.
+     * This folder type only holds messages.
+     */
     public int getType()
             throws MessagingException {
         return HOLDS_MESSAGES;
@@ -141,25 +146,25 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* This folder type is always read-only.
-*/
+     * This folder type is always read-only.
+     */
     public int getMode() {
         return READ_ONLY;
     }
 
     /**
-* Returns the flags supported by this folder.
-*/
+     * Returns the flags supported by this folder.
+     */
     public Flags getPermanentFlags() {
         NNTPStore ns = (NNTPStore) store;
         return new Flags(ns.permanentFlags);
     }
 
     /**
-* This method has no particular meaning in NNTP.
-* However, we will use it to send a GROUP command and refresh our article
-* stats.
-*/
+     * This method has no particular meaning in NNTP.
+     * However, we will use it to send a GROUP command and refresh our article
+     * stats.
+     */
     public void open(int mode)
             throws MessagingException {
         // NB this should probably throw an exception if READ_WRITE is
@@ -190,8 +195,8 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* This method has no particular meaning in NNTP.
-*/
+     * This method has no particular meaning in NNTP.
+     */
     public void close(boolean expunge)
             throws MessagingException {
         if (!groupMetaData.isOpen()) {
@@ -205,8 +210,8 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* Indicates whether the newsgroup is present on the server.
-*/
+     * Indicates whether the newsgroup is present on the server.
+     */
     public boolean exists() throws MessagingException {
         GroupResponse grpResp = null;
         try {
@@ -228,8 +233,8 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* Indicates whether there are new articles in this newsgroup.
-*/
+     * Indicates whether there are new articles in this newsgroup.
+     */
     public boolean hasNewMessages()
             throws MessagingException {
         try {
@@ -256,18 +261,18 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* Returns the number of articles in this newsgroup.
-*/
+     * Returns the number of articles in this newsgroup.
+     */
     public int getMessageCount()
             throws MessagingException {
         return groupMetaData.getCount();
     }
 
     /**
-* Returns the article corresponding to the specified article
-* number.
-* @throws MessageRemovedException often ;-)
-*/
+     * Returns the article corresponding to the specified article
+     * number.
+     * @throws MessageRemovedException often ;-)
+     */
     public Message getMessage(int msgnum)
             throws MessagingException {
         if (!groupMetaData.isOpen()) {
@@ -309,9 +314,9 @@ public final class NNTPFolder extends Folder {
     }
 
     /*
-* Perform article STAT.
-* NB not synchronized against the connection!
-*/
+     * Perform article STAT.
+     * NB not synchronized against the connection!
+     */
     NNTPMessage getMessageImpl(int msgnum)
             throws IOException {
         NNTPStore ns = (NNTPStore) store;
@@ -322,10 +327,10 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* Returns all articles in this group.
-* This tries XHDR first to retrieve Message-IDs for the articles.
-* If this fails we fall back to statting each article.
-*/
+     * Returns all articles in this group.
+     * This tries XHDR first to retrieve Message-IDs for the articles.
+     * If this fails we fall back to statting each article.
+     */
     public Message[] getMessages()
             throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
@@ -396,8 +401,8 @@ public final class NNTPFolder extends Folder {
     }
 
     /**
-* Prefetch.
-*/
+     * Prefetch.
+     */
     public void fetch(Message[] msgs, FetchProfile fp) throws MessagingException {
         boolean head = fp.contains(FetchProfile.Item.ENVELOPE);
         head = head || (fp.getHeaderNames().length > 0);
@@ -472,18 +477,18 @@ public final class NNTPFolder extends Folder {
 
     // -- Subscription --
     /**
-* Indicates if the newsgroup is subscribed.
-* This uses the newsrc mechanism associated with this folder's store.
-*/
+     * Indicates if the newsgroup is subscribed.
+     * This uses the newsrc mechanism associated with this folder's store.
+     */
     public boolean isSubscribed() {
         NNTPStore ns = (NNTPStore) store;
         return ns.newsrc.isSubscribed(groupMetaData.getGroup());
     }
 
     /**
-* Subscribes or unsubscribes to this newsgroup.
-* This uses the newsrc mechanism associated with this folder's store.
-*/
+     * Subscribes or unsubscribes to this newsgroup.
+     * This uses the newsrc mechanism associated with this folder's store.
+     */
     public void setSubscribed(boolean flag) throws MessagingException {
         NNTPStore ns = (NNTPStore) store;
         ns.newsrc.setSubscribed(groupMetaData.getGroup(), flag);
@@ -501,72 +506,72 @@ public final class NNTPFolder extends Folder {
 
     // -- Stuff we can't do --
     /**
-* This folder type does not contain other folders.
-*/
+     * This folder type does not contain other folders.
+     */
     public Folder getFolder(String name)
             throws MessagingException {
         throw new MethodNotSupportedException();
     }
 
     /**
-* This folder type does not contain other folders.
-*/
+     * This folder type does not contain other folders.
+     */
     public Folder[] list(String pattern)
             throws MessagingException {
         throw new MethodNotSupportedException();
     }
 
     /**
-* This folder type does not contain other folders.
-*/
+     * This folder type does not contain other folders.
+     */
     public Folder[] listSubscribed(String pattern)
             throws MessagingException {
         return list(pattern);
     }
 
     /**
-* If we move away from a flat namespace, this might be useful.
-*/
+     * If we move away from a flat namespace, this might be useful.
+     */
     public char getSeparator()
             throws MessagingException {
         return '.';
     }
 
     /**
-* NNTP servers are read-only.
-*/
+     * NNTP servers are read-only.
+     */
     public boolean create(int type)
             throws MessagingException {
         throw new MethodNotSupportedException();
     }
 
     /**
-* NNTP servers are read-only.
-*/
+     * NNTP servers are read-only.
+     */
     public boolean delete(boolean recurse)
             throws MessagingException {
         throw new MethodNotSupportedException();
     }
 
     /**
-* NNTP servers are read-only.
-*/
+     * NNTP servers are read-only.
+     */
     public boolean renameTo(Folder folder)
             throws MessagingException {
         throw new MethodNotSupportedException();
     }
 
     /**
-* NNTP servers are read-only.
-*/
+     * NNTP servers are read-only.
+     */
     public void appendMessages(Message[] messages)
             throws MessagingException {
         throw new IllegalWriteException();
     }
 
     /**
-* NNTP servers are read-only.
-*/
+     * NNTP servers are read-only.
+     */
     public Message[] expunge()
             throws MessagingException {
         throw new IllegalWriteException();
