@@ -1,6 +1,5 @@
 package net.bounceme.dur.nntp.swing;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -28,8 +27,8 @@ public class ArticlesList extends JScrollPane {
     public ArticlesList() {
         String s = "";
         for (int i = 1; i < 9; i++) {
-           s = String.valueOf(i);
-           dlm.addElement(s);
+            s = String.valueOf(i);
+            dlm.addElement(s);
         }
         initComponents();
     }
@@ -74,6 +73,11 @@ public class ArticlesList extends JScrollPane {
         pageMetaData = new PageMetaData(page.getPageMetaData(), true);
         page = usenetConnection.getPage(pageMetaData);
         List<Message> messages = page.getMessages();
+        loadDLM(messages);
+        LOG.info(page.toString());
+    }
+
+    private void loadDLM(List<Message> messages) {
         dlm = new DefaultListModel<>();
         for (Message m : messages) {
             try {
@@ -83,6 +87,5 @@ public class ArticlesList extends JScrollPane {
             }
         }
         jList.setModel(dlm);
-        LOG.info(page.toString());
     }
 }
