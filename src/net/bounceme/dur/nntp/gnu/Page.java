@@ -80,7 +80,7 @@ public class Page {
         try {
             s = s + printXref();
         } catch (MessagingException ex) {
-            ex.printStackTrace();
+            LOG.warning(ex.toString());
         }
         return s;
     }

@@ -15,15 +15,12 @@ public class Driver {
         GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
         frame.setMaximizedBounds(e.getMaximumWindowBounds());
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        //frame.setSize(500, 500);
         frame.setLayout(new BorderLayout());
-
         JTabbedPane tabs = new JTabbedPane();
-
+        LOG.info("creating ArticlesPanel...");
         ArticlesPanel myPanel = new ArticlesPanel();
         tabs.add(myPanel);
         frame.add(tabs);
-
         frame.pack();
         frame.setVisible(true);
     }
@@ -35,7 +32,7 @@ public class Driver {
                 try {
                     createAndShowGUI();
                 } catch (Exception ex) {
-                    LOG.warning(ex.getLocalizedMessage());
+                    LOG.warning(ex.toString());
                 }
             }
         });
