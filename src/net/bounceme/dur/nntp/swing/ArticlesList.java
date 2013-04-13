@@ -83,7 +83,7 @@ public class ArticlesList extends JScrollPane {
         jList.setModel(dlm);
     }
 
-    public Message getArticle(int i) {
+    public Message getMessage(int i) {
         List<Message> messages = page.getMessages();
         Message m = messages.get(i);
         return m;
