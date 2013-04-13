@@ -23,6 +23,7 @@ public class ArticlesList extends JScrollPane {
     private Page page;
     private Usenet usenetConnection = Usenet.INSTANCE;
     private PageMetaData pageMetaData = new PageMetaData();
+    private List<Message> messages = null;
 
     public ArticlesList() {
         try {
@@ -66,12 +67,12 @@ public class ArticlesList extends JScrollPane {
         page = new Page(pageMetaData);
         pageMetaData = new PageMetaData(page.getPageMetaData(), true);
         page = usenetConnection.getPage(pageMetaData);
-        List<Message> messages = page.getMessages();
-        loadDLM(messages);
+        messages = page.getMessages();
+        loadDLM();
         LOG.fine(page.toString());
     }
 
-    private void loadDLM(List<Message> messages) {
+    private void loadDLM() {
         dlm = new DefaultListModel<>();
         for (Message m : messages) {
             try {
@@ -84,7 +85,7 @@ public class ArticlesList extends JScrollPane {
     }
 
     public Message getMessage(int i) {
-        List<Message> messages = page.getMessages();
+        LOG.info("trying to get\t\t" + i);
         Message m = messages.get(i);
         return m;
     }

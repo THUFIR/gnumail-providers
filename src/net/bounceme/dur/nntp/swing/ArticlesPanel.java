@@ -5,10 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.logging.Logger;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -43,16 +41,16 @@ public class ArticlesPanel extends JPanel {
 
             @Override
             public void propertyChange(PropertyChangeEvent e) {
-                String articleIndexString = e.getNewValue().toString();
-                LOG.info("article\t\t" + articleIndexString);
-                  articleContent.setText(articleIndexString);
+                String messageIndexString = e.getNewValue().toString();
+                articleContent.setText(messageIndexString);
+                int index = 0;
                 try {
-                    int index = Integer.getInteger(articleIndexString);
-                    LOG.info("article\t\t" + index);
+                    index = Integer.getInteger(messageIndexString);
                     Message message = articlesList.getMessage(index);
                     articleContent.setText(message.getContent().toString());
                 } catch (Exception ex) {
-                    LOG.warning("bad message?\t\t" + articleIndexString + ex);
+                    LOG.warning("bad message?\t" + index + "\t" + ex);
+                    //articleContent.setText("bad message?\t" + index + "\t" + ex);
                 }
             }
         });
