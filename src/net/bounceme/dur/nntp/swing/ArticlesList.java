@@ -21,14 +21,14 @@ public class ArticlesList extends JScrollPane {
     private JList<String> jList = new JList<>();
     private DefaultListModel<String> dlm = new DefaultListModel<>();
     private Page page;
-    private Usenet usenetConnection = Usenet.INSTANCE;  //ensures correct connection
+    private Usenet usenetConnection = Usenet.INSTANCE;
     private PageMetaData pageMetaData = new PageMetaData();
 
     public ArticlesList() {
-        String s = "";
-        for (int i = 1; i < 9; i++) {
-            s = String.valueOf(i);
-            dlm.addElement(s);
+        try {
+            nextPage();
+        } catch (Exception ex) {
+            LOG.warning(ex.toString());
         }
         initComponents();
     }
@@ -50,7 +50,7 @@ public class ArticlesList extends JScrollPane {
             }
         });
 
-        setSize(500, 500);
+        setSize(2000, 2000);
         setViewportView(jList);
         jList.setVisible(true);
         setVisible(true);
@@ -68,7 +68,7 @@ public class ArticlesList extends JScrollPane {
         LOG.info("selected\t\t" + jList.getSelectedValue());
     }
 
-    public void nextPage() throws Exception {
+    public final void nextPage() throws Exception {
         page = new Page(pageMetaData);
         pageMetaData = new PageMetaData(page.getPageMetaData(), true);
         page = usenetConnection.getPage(pageMetaData);
