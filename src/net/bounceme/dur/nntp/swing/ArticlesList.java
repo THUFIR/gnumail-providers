@@ -60,7 +60,9 @@ public class ArticlesList extends JScrollPane {
     private void itemSelected() {
         int index = jList.getSelectedIndex();
         LOG.fine("selected\t\t" + index);
-        this.firePropertyChange("index", null, index);
+        index = (index < 0) ? 0 : index;
+        Message message = getMessage(index);
+        firePropertyChange("message", null, message);
     }
 
     public final void nextPage() throws Exception {
@@ -84,7 +86,7 @@ public class ArticlesList extends JScrollPane {
         jList.setModel(dlm);
     }
 
-    public Message getMessage(int i) {
+    private Message getMessage(int i) {
         LOG.info("trying to get\t\t" + i);
         Message m = messages.get(i);
         return m;

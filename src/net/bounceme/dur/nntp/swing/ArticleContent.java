@@ -1,7 +1,10 @@
 package net.bounceme.dur.nntp.swing;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
 import java.util.logging.Logger;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -32,7 +35,7 @@ public class ArticleContent extends JPanel {
         setVisible(true);
     }
 
-    public void setText(String articleContent) {
-        textArea.setText(articleContent);
+    public void setText(Message message) throws  IOException, MessagingException {
+        textArea.setText(message.getContent().toString());
     }
 }

@@ -5,8 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.logging.Logger;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -17,6 +19,7 @@ public class ArticlesPanel extends JPanel {
     private ArticlesList articlesList = new ArticlesList();
     private JButton next = new JButton("next");
     private ArticleContent articleContent = new ArticleContent();
+    private ArticleContent east = new ArticleContent();
 
     public ArticlesPanel() {
         LOG.fine("creating...");
@@ -41,26 +44,27 @@ public class ArticlesPanel extends JPanel {
 
             @Override
             public void propertyChange(PropertyChangeEvent e) {
-                String messageIndexString = e.getNewValue().toString();
-                articleContent.setText(messageIndexString);
-                int index = 0;
-                try {
-                    index = Integer.getInteger(messageIndexString);
-                    Message message = articlesList.getMessage(index);
-                    articleContent.setText(message.getContent().toString());
-                } catch (Exception ex) {
-                    LOG.warning("bad message?\t" + index + "\t" + ex);
-                    //articleContent.setText("bad message?\t" + index + "\t" + ex);
+                LOG.info("trying..." + e.getPropertyName());
+                if ("message".equals(e.getPropertyName())) {
+                    try {
+                        Message m = (Message) e.getNewValue();
+                        LOG.info("good message?\t" + m.getSubject());
+                        articleContent.setText(m);
+                    } catch (IOException | MessagingException ex) {
+                        LOG.info("bad message?\t" + ex.toString());
+                    }
                 }
             }
         });
 
         add(articlesList, BorderLayout.WEST);
         add(articleContent, BorderLayout.CENTER);
+        add(east, BorderLayout.EAST);
         add(next, BorderLayout.SOUTH);
         setSize(300, 100);
         articlesList.setVisible(true);
         articleContent.setVisible(true);
+        east.setVisible(true);
         setVisible(true);
     }
 
