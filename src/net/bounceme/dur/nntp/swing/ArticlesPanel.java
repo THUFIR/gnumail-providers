@@ -8,15 +8,14 @@ import java.beans.PropertyChangeListener;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 public class ArticlesPanel extends JPanel {
 
     private static final Logger LOG = Logger.getLogger(ArticlesPanel.class.getName());
     private static final long serialVersionUID = 1L;
-
-    private ArticlesList observed = new ArticlesList();
+    private ArticlesList articlesList = new ArticlesList();
     private JButton next = new JButton("next");
+    private ArticleContent ac = new ArticleContent();
 
     public ArticlesPanel() {
         LOG.fine("creating...");
@@ -35,10 +34,9 @@ public class ArticlesPanel extends JPanel {
                     LOG.warning(ex.toString());
                 }
             }
-
         });
 
-      observed.addPropertyChangeListener(new PropertyChangeListener() {
+        articlesList.addPropertyChangeListener(new PropertyChangeListener() {
 
             @Override
             public void propertyChange(PropertyChangeEvent e) {
@@ -49,14 +47,16 @@ public class ArticlesPanel extends JPanel {
             }
         });
 
-        add(observed);
-        add(observed, BorderLayout.WEST);
+        add(articlesList, BorderLayout.WEST);
+        add(ac, BorderLayout.CENTER);
         add(next, BorderLayout.SOUTH);
         setSize(300, 100);
-        observed.setVisible(true);
+        articlesList.setVisible(true);
+        ac.setVisible(true);
         setVisible(true);
     }
-            private void nextPage(ActionEvent e) throws Exception {
-                observed.nextPage();
-            }
+
+    private void nextPage(ActionEvent e) throws Exception {
+        articlesList.nextPage();
+    }
 }
