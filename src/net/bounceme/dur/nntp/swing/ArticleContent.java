@@ -31,4 +31,8 @@ public class ArticleContent extends JPanel {
         scrollPane.setVisible(true);
         setVisible(true);
     }
+
+    public void setText(String articleContent) {
+        textArea.setText(articleContent);
+    }
 }

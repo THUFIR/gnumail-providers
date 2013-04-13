@@ -5,7 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.logging.Logger;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -40,9 +43,16 @@ public class ArticlesPanel extends JPanel {
 
             @Override
             public void propertyChange(PropertyChangeEvent e) {
-                if (e.getPropertyName().equals(ArticlesList.PHYSICIST)) {
-                    String value = e.getNewValue().toString();
-                    LOG.fine(value);
+                try {
+                    String articleIndex = e.getNewValue().toString();
+                    LOG.fine(articleIndex);
+                    ac.setText(articleIndex);
+                    //somehow,get article content from the map in MessageFolder
+                    //or something
+                    Message m = articlesList.getArticle(0);
+                    ac.setText(m.getContent().toString());
+                } catch (IOException | MessagingException ex) {
+                    LOG.fine("bad message?\n" + ex);
                 }
             }
         });

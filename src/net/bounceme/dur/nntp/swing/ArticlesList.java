@@ -17,7 +17,7 @@ public class ArticlesList extends JScrollPane {
 
     private static final Logger LOG = Logger.getLogger(ArticlesList.class.getName());
     private static final long serialVersionUID = 1L;
-    public static final String PHYSICIST = "physicist";
+    public static final String INDEX = "index";
     private JList<String> jList = new JList<>();
     private DefaultListModel<String> dlm = new DefaultListModel<>();
     private Page page;
@@ -40,13 +40,13 @@ public class ArticlesList extends JScrollPane {
         jList.addMouseListener(new java.awt.event.MouseAdapter() {
 
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                mouseReleases(evt);
+                itemSelected();
             }
         });
         jList.addKeyListener(new java.awt.event.KeyAdapter() {
 
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                keyReleases(evt);
+                itemSelected();
             }
         });
 
@@ -56,16 +56,10 @@ public class ArticlesList extends JScrollPane {
         setVisible(true);
     }
 
-    private void keyReleases(KeyEvent evt) {
-        itemSelected();
-    }
-
-    private void mouseReleases(MouseEvent evt) {
-        itemSelected();
-    }
-
     private void itemSelected() {
-        LOG.fine("selected\t\t" + jList.getSelectedValue());
+        int index = jList.getSelectedIndex();
+        LOG.fine("selected\t\t" + index);
+        this.firePropertyChange("index", null, index);
     }
 
     public final void nextPage() throws Exception {
@@ -87,5 +81,11 @@ public class ArticlesList extends JScrollPane {
             }
         }
         jList.setModel(dlm);
+    }
+
+    public Message getArticle(int i) {
+        List<Message> messages = page.getMessages();
+        Message m = messages.get(i);
+        return m;
     }
 }
