@@ -44,16 +44,15 @@ public class ArticlesPanel extends JPanel {
 
             @Override
             public void propertyChange(PropertyChangeEvent e) {
-                LOG.info("trying..." + e.getPropertyName());
-                if ("message".equals(e.getPropertyName())) {
-                    try {
-                        Message m = (Message) e.getNewValue();
-                        LOG.info("good message?\t" + m.getSubject());
-                        articleContent.setText(m);
-                    } catch (IOException | MessagingException ex) {
-                        LOG.info("bad message?\t" + ex.toString());
-                    }
+                LOG.fine("trying..." + e.getPropertyName());
+                try {
+                    Message m = (Message) e.getNewValue();
+                    LOG.fine("good message?\t" + m.getSubject());
+                    articleContent.setText(m);
+                } catch (Exception ex) {
+                    LOG.fine("bad message?\t" + ex.toString());
                 }
+
             }
         });
 

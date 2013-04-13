@@ -87,7 +87,7 @@ public class ArticlesList extends JScrollPane {
     }
 
     private Message getMessage(int i) {
-        LOG.info("trying to get\t\t" + i);
+        LOG.fine("trying to get\t\t" + i);
         Message m = messages.get(i);
         return m;
     }
