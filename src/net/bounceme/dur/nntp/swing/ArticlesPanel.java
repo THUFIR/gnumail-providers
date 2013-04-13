@@ -19,7 +19,7 @@ public class ArticlesPanel extends JPanel {
     private JButton next = new JButton("next");
 
     public ArticlesPanel() {
-        LOG.info("creating...");
+        LOG.fine("creating...");
         initComponents();
     }
 
@@ -44,7 +44,7 @@ public class ArticlesPanel extends JPanel {
             public void propertyChange(PropertyChangeEvent e) {
                 if (e.getPropertyName().equals(ArticlesList.PHYSICIST)) {
                     String value = e.getNewValue().toString();
-                    LOG.info(value);
+                    LOG.fine(value);
                 }
             }
         });

@@ -17,7 +17,7 @@ public class Driver {
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         frame.setLayout(new BorderLayout());
         JTabbedPane tabs = new JTabbedPane();
-        LOG.info("creating ArticlesPanel...");
+        LOG.fine("creating ArticlesPanel...");
         ArticlesPanel myPanel = new ArticlesPanel();
         tabs.add(myPanel);
         frame.add(tabs);

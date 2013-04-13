@@ -65,7 +65,7 @@ public class ArticlesList extends JScrollPane {
     }
 
     private void itemSelected() {
-        LOG.info("selected\t\t" + jList.getSelectedValue());
+        LOG.fine("selected\t\t" + jList.getSelectedValue());
     }
 
     public final void nextPage() throws Exception {
@@ -74,7 +74,7 @@ public class ArticlesList extends JScrollPane {
         page = usenetConnection.getPage(pageMetaData);
         List<Message> messages = page.getMessages();
         loadDLM(messages);
-        LOG.info(page.toString());
+        LOG.fine(page.toString());
     }
 
     private void loadDLM(List<Message> messages) {
