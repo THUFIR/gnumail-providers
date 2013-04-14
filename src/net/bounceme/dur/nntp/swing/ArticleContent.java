@@ -35,7 +35,9 @@ public class ArticleContent extends JPanel {
         setVisible(true);
     }
 
-    public void setText(Message message) throws  IOException, MessagingException {
+    public void setMessage(Message message) throws  IOException, MessagingException {
         textArea.setText(message.getContent().toString());
     }
+
+
 }

@@ -5,10 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.logging.Logger;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -19,7 +17,7 @@ public class ArticlesPanel extends JPanel {
     private ArticlesList articlesList = new ArticlesList();
     private JButton next = new JButton("next");
     private ArticleContent articleContent = new ArticleContent();
-    private ArticleContent east = new ArticleContent();
+    private ArticleContent headers = new ArticleContent();
 
     public ArticlesPanel() {
         LOG.fine("creating...");
@@ -47,8 +45,10 @@ public class ArticlesPanel extends JPanel {
                 LOG.fine("trying..." + e.getPropertyName());
                 try {
                     Message m = (Message) e.getNewValue();
+                    headers.setMessage(m);
                     LOG.fine("good message?\t" + m.getSubject());
-                    articleContent.setText(m);
+                    articleContent.setMessage(m);
+                    headers.setMessage(m);
                 } catch (Exception ex) {
                     LOG.fine("bad message?\t" + ex.toString());
                 }
@@ -58,12 +58,12 @@ public class ArticlesPanel extends JPanel {
 
         add(articlesList, BorderLayout.WEST);
         add(articleContent, BorderLayout.CENTER);
-        add(east, BorderLayout.EAST);
+        add(headers, BorderLayout.EAST);
         add(next, BorderLayout.SOUTH);
         setSize(300, 100);
         articlesList.setVisible(true);
         articleContent.setVisible(true);
-        east.setVisible(true);
+        headers.setVisible(true);
         setVisible(true);
     }
 
