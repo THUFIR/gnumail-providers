@@ -48,7 +48,7 @@ public class ArticlesPanel extends JPanel {
                     headers.setMessage(m);
                     LOG.fine("good message?\t" + m.getSubject());
                     articleContent.setMessage(m);
-                    headers.setMessage(m);
+                    headers.setMessageXref(m);
                 } catch (Exception ex) {
                     LOG.fine("bad message?\t" + ex.toString());
                 }

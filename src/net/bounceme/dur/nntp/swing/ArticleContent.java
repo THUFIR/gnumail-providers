@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import net.bounceme.dur.nntp.gnu.MessageUtil;
 
 public class ArticleContent extends JPanel {
 
@@ -35,9 +36,13 @@ public class ArticleContent extends JPanel {
         setVisible(true);
     }
 
-    public void setMessage(Message message) throws  IOException, MessagingException {
+    public void setMessage(Message message) throws IOException, MessagingException {
         textArea.setText(message.getContent().toString());
     }
 
-
+    void setMessageXref(Message m) throws MessagingException {
+        MessageUtil util = new MessageUtil();
+        String xref = util.getXref(m);
+        textArea.setText(xref);
+    }
 }
