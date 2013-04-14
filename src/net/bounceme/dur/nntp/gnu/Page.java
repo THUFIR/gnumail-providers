@@ -3,10 +3,8 @@ package net.bounceme.dur.nntp.gnu;
 import gnu.mail.providers.nntp.GroupMetaData;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 

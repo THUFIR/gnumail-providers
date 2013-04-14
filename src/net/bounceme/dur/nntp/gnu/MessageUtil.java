@@ -1,7 +1,6 @@
 package net.bounceme.dur.nntp.gnu;
 
 import java.util.Enumeration;
-import java.util.List;
 import java.util.logging.Logger;
 import javax.mail.Header;
 import javax.mail.Message;
@@ -44,8 +43,9 @@ public class MessageUtil {
         return sb.toString();
     }
 
-    public void getXrefObj(Message message) throws MessagingException {
+    public int getXrefObj(Message message) throws MessagingException {
         LOG.fine("starting xref printing...\t" + message.getSubject());
+        int xref = 0;
         StringBuilder sb = new StringBuilder();
         String s = null;
         String headerString = null;
@@ -64,7 +64,7 @@ public class MessageUtil {
                 headerString = header.getValue();
                 int index = headerString.indexOf(":");
                 subString = headerString.substring(index + 1);
-                int xref = Integer.parseInt(subString);
+                xref = Integer.parseInt(subString);
                 s = "\n" + "\t\t" + xref;
                 sb.append(s);
                 s = message.getSubject();
@@ -74,5 +74,6 @@ public class MessageUtil {
         LOG.fine("\n\n\n**********************\n\n\n");
         //}
         LOG.fine(sb.toString());
+        return xref;
     }
 }
