@@ -2,7 +2,6 @@ package net.bounceme.dur.nntp.gnu;
 
 import gnu.mail.providers.nntp.NNTPFolder;
 import gnu.mail.providers.nntp.NNTPRootFolder;
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,6 +71,7 @@ public enum Usenet {
         }
         return p;
     }
+
 
     public List<Folder> getFolders() {
         LOG.fine("folders " + folders);

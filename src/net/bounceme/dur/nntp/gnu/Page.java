@@ -14,7 +14,7 @@ public class Page {
 
     private final static Logger LOG = Logger.getLogger(Page.class.getName());
     private List<Message> messages = new ArrayList<>();
-     private PageMetaData pageMetaData = new PageMetaData();
+    private PageMetaData pageMetaData = new PageMetaData();
 
     public Page() throws Exception {
         GroupMetaData gmd = new GroupMetaData();
@@ -33,7 +33,6 @@ public class Page {
         this.pageMetaData = pmd;
         this.messages = messages;
     }
-
 
     public List<Message> getMessages() {
         return Collections.unmodifiableList(messages);
