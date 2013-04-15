@@ -49,7 +49,7 @@ public enum Usenet {
         } catch (Exception ex) {
             LOG.warning("no page\n" + ex);
         }
-        LOG.fine("fetching.." + pmd.getGmd().getGroup());
+        LOG.info("fetching.." + pmd.getGmd().getGroup());
         try {
             folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
         } catch (MessagingException ex) {
@@ -60,18 +60,17 @@ public enum Usenet {
         } catch (MessagingException ex) {
             LOG.warning("cannot open folder\n" + ex);
         }
-        LOG.fine("..fetched " + folder);
-        LOG.fine(pmd.toString());
-        List<javax.mail.Message> messages = folder.getMessages(pmd);
-        LOG.fine("message size\t" + messages.size());
+        LOG.info("..fetched " + folder);
+        LOG.info(pmd.toString());
+        Map<Integer, Message> messages = folder.getCache(pmd);
         try {
             p = new Page(pmd, messages);
         } catch (MessagingException ex) {
             LOG.warning("no page\n" + ex);
         }
+        LOG.info(p.toString());
         return p;
     }
-
 
     public List<Folder> getFolders() {
         LOG.fine("folders " + folders);

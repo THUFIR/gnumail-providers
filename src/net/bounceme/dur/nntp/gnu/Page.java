@@ -1,9 +1,10 @@
 package net.bounceme.dur.nntp.gnu;
 
 import gnu.mail.providers.nntp.GroupMetaData;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -11,7 +12,7 @@ import javax.mail.MessagingException;
 public class Page {
 
     private final static Logger LOG = Logger.getLogger(Page.class.getName());
-    private List<Message> messages = new ArrayList<>();
+    private Map<Integer, Message> messages = new HashMap<>();
     private PageMetaData pageMetaData = new PageMetaData();
 
     public Page() throws Exception {
@@ -27,18 +28,33 @@ public class Page {
         this.pageMetaData = pmd;
     }
 
-    public Page(PageMetaData pmd, List<Message> messages) throws MessagingException {
+    public Page(PageMetaData pmd, Map<Integer, Message> messages) throws MessagingException {
         this.pageMetaData = pmd;
         this.messages = messages;
     }
 
-    public List<Message> getMessages() {
-        return Collections.unmodifiableList(messages);
+    public Map<Integer, Message> getMessages() {
+
+        return Collections.unmodifiableMap(messages);
     }
 
     public String toString() {
-        String s = "\n---new page---\n" + getPageMetaData().toString() + "\n";
-        return s;
+        int key = 0;
+        Message v = null;
+        StringBuilder s = new StringBuilder();
+        String t = null;
+        s.append("---Page---\n");
+        for (Entry<Integer, Message> entry : messages.entrySet()) {
+            key = entry.getKey();
+            v = messages.get(key);
+            try {
+                t = key + "\t\t" + v.getSubject() + "\n";
+            } catch (MessagingException ex) {
+                LOG.warning("bad message\n" + ex);
+            }
+            s.append(t);
+        }
+        return s.toString();
     }
 
     public PageMetaData getPageMetaData() {

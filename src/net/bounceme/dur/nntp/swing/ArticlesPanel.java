@@ -14,7 +14,7 @@ public class ArticlesPanel extends JPanel {
 
     private static final Logger LOG = Logger.getLogger(ArticlesPanel.class.getName());
     private static final long serialVersionUID = 1L;
-    private ArticlesList articlesList = new ArticlesList();
+    private ArticlesTable articlesList = new ArticlesTable();
     private JButton next = new JButton("next");
     private ArticleContent articleContent = new ArticleContent();
     private ArticleContent headers = new ArticleContent();
@@ -33,7 +33,8 @@ public class ArticlesPanel extends JPanel {
                 try {
                     nextPage(e);
                 } catch (Exception ex) {
-                    LOG.warning(ex.toString());
+                    LOG.fine("initComponents.addActionListener");
+                    LOG.fine(ex.toString());
                 }
             }
         });

@@ -68,14 +68,14 @@ public final class NNTPFolder extends Folder {
 
     private static final Logger LOG = Logger.getLogger(NNTPFolder.class.getName());
     private GroupMetaData groupMetaData = new GroupMetaData();
-    Map articleCache; // cache of article-number to NNTPMessage
+    private Map<Integer,Message> articleCache; // cache of article-number to NNTPMessage
 
     NNTPFolder(NNTPStore ns, String name) {
         super(ns);
         groupMetaData = new GroupMetaData(name);
     }
 
-    public List<Message> getMessages(PageMetaData pageMetaData) {
+    private List<Message> getMessages(PageMetaData pageMetaData) {
         LOG.fine("getting messages per\n" + pageMetaData);
         String group = pageMetaData.getGmd().getGroup();
         int min = pageMetaData.getPageStart();
@@ -107,6 +107,35 @@ public final class NNTPFolder extends Folder {
             messages.removeAll(Collections.singleton(null));
         }
         return messages;
+    }
+
+    public Map<Integer,Message> getCache(PageMetaData pageMetaData) {
+        LOG.fine("getting messages per\n" + pageMetaData);
+        String group = pageMetaData.getGmd().getGroup();
+        int min = pageMetaData.getPageStart();
+        int max = pageMetaData.getPageEnd();
+        NNTPStore ns = (NNTPStore) store;
+        NNTPConnection connection = ns.connection;
+        LOG.fine("connected..." + min + "\t" + max);
+        articleCache.clear();
+        synchronized (connection) {
+            GroupResponse groupResponse = null;
+            try {
+                groupResponse = connection.group(group);
+            } catch (IOException ex) {
+                LOG.warning("no groupResponse\n" + ex);
+            }
+            groupMetaData = new GroupMetaData(groupResponse);
+            for (int i = min; i < max; i++) {
+                try {
+                    Message message = getMessageImpl(i);
+                    articleCache.put(i, message);
+                } catch (IOException ex) {
+                    LOG.fine("no worries\n" + ex);
+                }
+            }
+        }
+        return Collections.unmodifiableMap(articleCache);
     }
 
     /**
