@@ -1,6 +1,5 @@
 package net.bounceme.dur.nntp.swing;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
@@ -23,15 +22,16 @@ public class ArticlesTable extends JScrollPane {
     private DefaultTableModel defaultTableModel = new DefaultTableModel();
     private Page page;
     private Usenet usenetConnection = Usenet.INSTANCE;
-    private PageMetaData pageMetaData = new PageMetaData();
-    //private Map<Integer, Message> messages = new HashMap<>();
 
-    public ArticlesTable() {
+    public ArticlesTable() throws Exception {
+        page = new Page();
+        LOG.info(page.toString());
         initComponents();
     }
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
+
 
         defaultTableModel = new DefaultTableModel(new Object[][]{
                     {"some", "text"}, {"any", "text"}, {"even", "more"},
@@ -60,21 +60,17 @@ public class ArticlesTable extends JScrollPane {
 
     private void itemSelected() {
         int row = jTable.getSelectedRow();
-        int column = 1;
+        int column = 0;
         Object selectedObject = jTable.getValueAt(row, column);
-        @SuppressWarnings("unchecked")
- //       Entry<Integer, Message> entry = (Entry<Integer, Message>) selectedObject;
-        Message message = (Message) selectedObject;
-        LOG.fine("selected\t\t" + row);
-        row = (row < 0) ? 0 : row;
+        int i = (int) selectedObject;
+        Map<Integer, Message> messages = page.getMessages();
+        Message message = messages.get(i);
         firePropertyChange("message", null, message);
     }
 
-    public final void nextPage() throws Exception {
-        page = new Page(pageMetaData);
+    public final void nextPage(PageMetaData pageMetaData) throws Exception {
         pageMetaData = new PageMetaData(page.getPageMetaData(), true);
         page = usenetConnection.getPage(pageMetaData);
-        Map<Integer, Message> messages = page.getMessages();
         loadDLM();
         LOG.fine(page.toString());
     }
@@ -95,15 +91,10 @@ public class ArticlesTable extends JScrollPane {
             key = entry.getKey();
             message = messages.get(key);
             rowData.add(key);
-            rowData.add(message);
+            rowData.add(message.getSubject());
             LOG.fine("vector\t" + key + "\t" + message.getSubject());
             defaultTableModel.addRow(rowData);
         }
-        jTable.setModel(defaultTableModel);
-        jTable.repaint();
-        jTable.revalidate();
-        repaint();
-        revalidate();
     }
 
     private Message getMessage(int i) {

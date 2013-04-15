@@ -18,7 +18,7 @@ public class Driver {
         frame.setLayout(new BorderLayout());
         JTabbedPane tabs = new JTabbedPane();
         LOG.fine("creating ArticlesPanel...");
-        ArticlesPanel myPanel = new ArticlesPanel();
+        ArticlesJPanelContainer myPanel = new ArticlesJPanelContainer();
         tabs.add(myPanel);
         frame.add(tabs);
         frame.pack();

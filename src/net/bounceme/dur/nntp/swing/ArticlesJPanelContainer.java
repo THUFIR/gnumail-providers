@@ -9,18 +9,20 @@ import java.util.logging.Logger;
 import javax.mail.Message;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import net.bounceme.dur.nntp.gnu.PageMetaData;
 
-public class ArticlesPanel extends JPanel {
+public class ArticlesJPanelContainer extends JPanel {
 
-    private static final Logger LOG = Logger.getLogger(ArticlesPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ArticlesJPanelContainer.class.getName());
     private static final long serialVersionUID = 1L;
-    private ArticlesTable articlesList = new ArticlesTable();
+    private ArticlesTable articlesTable = null;
     private JButton next = new JButton("next");
     private ArticleContent articleContent = new ArticleContent();
     private ArticleContent headers = new ArticleContent();
 
-    public ArticlesPanel() {
+    public ArticlesJPanelContainer() throws Exception {
         LOG.fine("creating...");
+        articlesTable = new ArticlesTable();
         initComponents();
     }
 
@@ -39,7 +41,7 @@ public class ArticlesPanel extends JPanel {
             }
         });
 
-        articlesList.addPropertyChangeListener(new PropertyChangeListener() {
+        articlesTable.addPropertyChangeListener(new PropertyChangeListener() {
 
             @Override
             public void propertyChange(PropertyChangeEvent e) {
@@ -57,18 +59,18 @@ public class ArticlesPanel extends JPanel {
             }
         });
 
-        add(articlesList, BorderLayout.WEST);
+        add(articlesTable, BorderLayout.WEST);
         add(articleContent, BorderLayout.CENTER);
         add(headers, BorderLayout.EAST);
         add(next, BorderLayout.SOUTH);
         setSize(300, 100);
-        articlesList.setVisible(true);
+        articlesTable.setVisible(true);
         articleContent.setVisible(true);
         headers.setVisible(true);
         setVisible(true);
     }
 
     private void nextPage(ActionEvent e) throws Exception {
-        articlesList.nextPage();
+        articlesTable.nextPage(new PageMetaData());
     }
 }

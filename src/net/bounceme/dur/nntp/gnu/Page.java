@@ -43,7 +43,8 @@ public class Page {
         Message v = null;
         StringBuilder s = new StringBuilder();
         String t = null;
-        s.append("---Page---\n");
+        s.append("\n---Page---\n");
+        s.append(pageMetaData.toString());
         for (Entry<Integer, Message> entry : messages.entrySet()) {
             key = entry.getKey();
             v = messages.get(key);
