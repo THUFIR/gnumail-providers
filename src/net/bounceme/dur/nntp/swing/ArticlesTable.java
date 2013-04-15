@@ -73,7 +73,7 @@ public class ArticlesTable extends JScrollPane {
         page = usenetConnection.getPage(pageMetaData);
         LOG.fine("was the page advanced?" + page);
         loadDLM();
-        LOG.info(page.toString());
+        LOG.fine(page.toString());
     }
 
     @SuppressWarnings("unchecked")
@@ -86,16 +86,17 @@ public class ArticlesTable extends JScrollPane {
         Message message = null;
         Map<Integer, Message> messages = page.getMessages();
         int key = 0;
-        LOG.fine("trying to traverse..." + messages.size());
+        LOG.info("trying to traverse..." + messages.size());
         for (Entry<Integer, Message> entry : messages.entrySet()) {
             rowData.clear();
             key = entry.getKey();
             message = messages.get(key);
             rowData.add(key);
             rowData.add(message.getSubject());
-            LOG.fine("vector\t" + key + "\t" + message.getSubject());
+            LOG.info("vector\t" + key + "\t" + message.getSubject());
             defaultTableModel.addRow(rowData);
         }
+        jTable.setModel(defaultTableModel);
     }
 
     private Message getMessage(int i) {
