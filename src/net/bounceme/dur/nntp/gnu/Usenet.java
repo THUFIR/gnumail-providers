@@ -3,6 +3,7 @@ package net.bounceme.dur.nntp.gnu;
 import gnu.mail.providers.nntp.NNTPFolder;
 import gnu.mail.providers.nntp.NNTPRootFolder;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.*;
@@ -42,34 +43,24 @@ public enum Usenet {
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
-    public Page getPage(PageMetaData pmd) {
-        Page p = null;
-        try {
-            p = new Page(pmd);
-        } catch (Exception ex) {
-            LOG.warning("no page\n" + ex);
-        }
-        LOG.fine("fetching.." + pmd.getGmd().getGroup());
-        try {
-            folder = (NNTPFolder) root.getFolder(pmd.getGmd().getGroup());
-        } catch (MessagingException ex) {
-            LOG.warning("cannot load root folder\n" + ex);
-        }
-        try {
-            folder.open(Folder.READ_ONLY);
-        } catch (MessagingException ex) {
-            LOG.warning("cannot open folder\n" + ex);
-        }
+    public Page getPage(PageMetaData pmd) throws Exception {
+        String group = pmd.getGmd().getGroup();
+        LOG.fine("fetching.." + group);
+        folder = (NNTPFolder) root.getFolder(group);
+        folder.open(Folder.READ_ONLY);
         LOG.fine("..fetched " + folder);
         LOG.fine(pmd.toString());
         Map<Integer, Message> messages = folder.getCache(pmd);
-        try {
-            p = new Page(pmd, messages);
-        } catch (MessagingException ex) {
-            LOG.warning("no page\n" + ex);
+        int key;
+        Message m;
+        for (Entry<Integer, Message> entry : messages.entrySet()) {
+            key = entry.getKey();
+            m = entry.getValue();
+            LOG.info(key + m.getSubject());
         }
-        LOG.fine(p.toString());
-        return p;
+        Page page = new Page(pmd, messages);
+        LOG.severe(page.toString());
+        return page;
     }
 
     public List<Folder> getFolders() {
