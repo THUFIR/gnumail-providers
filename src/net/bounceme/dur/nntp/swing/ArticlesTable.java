@@ -68,9 +68,12 @@ public class ArticlesTable extends JScrollPane {
         firePropertyChange("message", null, message);
     }
 
-    public final void nextPage(PageMetaData pageMetaData) throws Exception {
-        pageMetaData = new PageMetaData(page.getPageMetaData(), true);
+    public final void nextPage() throws Exception {
+        LOG.info("trying to get next page..." + page);
+        PageMetaData pageMetaData = page.getPageMetaData();
+        pageMetaData.next();
         page = usenetConnection.getPage(pageMetaData);
+        LOG.info("was the page advanced?" + page);
         loadDLM();
         LOG.fine(page.toString());
     }

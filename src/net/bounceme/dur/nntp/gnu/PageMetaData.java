@@ -19,14 +19,6 @@ public class PageMetaData {
         this.gmd = gmd;
     }
 
-    public PageMetaData(PageMetaData previousPageMetaData, boolean next) {
-        gmd = previousPageMetaData.getGmd();
-        setRowsPerPage(previousPageMetaData.getRowsPerPage());
-        setPageStart(previousPageMetaData.getPageEnd() + 1);
-        setPageEnd(previousPageMetaData.getPageEnd() + rowsPerPage);
-        LOG.fine("\nreturning next..\n" + this.toString() + "\n\n\n");
-    }
-
     public GroupMetaData getGmd() {
         return gmd;
     }
@@ -74,4 +66,8 @@ public class PageMetaData {
         return "\n---pmd---\n" + gmd + pageStart + "\t\t" + pageEnd;
     }
 
+    public void next() {
+        pageStart = pageStart + rowsPerPage;
+        pageEnd = pageEnd + rowsPerPage;
+    }
 }

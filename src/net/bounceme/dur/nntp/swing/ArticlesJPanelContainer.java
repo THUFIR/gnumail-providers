@@ -71,6 +71,6 @@ public class ArticlesJPanelContainer extends JPanel {
     }
 
     private void nextPage(ActionEvent e) throws Exception {
-        articlesTable.nextPage(new PageMetaData());
+        articlesTable.nextPage();
     }
 }
