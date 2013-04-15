@@ -24,7 +24,7 @@ public class ArticlesTable extends JScrollPane {
     private Page page;
     private Usenet usenetConnection = Usenet.INSTANCE;
     private PageMetaData pageMetaData = new PageMetaData();
-    private Map<Integer, Message> messages = new HashMap<>();
+    //private Map<Integer, Message> messages = new HashMap<>();
 
     public ArticlesTable() {
         initComponents();
@@ -73,16 +73,18 @@ public class ArticlesTable extends JScrollPane {
         page = new Page(pageMetaData);
         pageMetaData = new PageMetaData(page.getPageMetaData(), true);
         page = usenetConnection.getPage(pageMetaData);
-        messages = page.getMessages();
+        Map<Integer, Message> messages = page.getMessages();
         loadDLM();
         LOG.fine(page.toString());
     }
 
     @SuppressWarnings("unchecked")
     private void loadDLM() throws MessagingException {
+        LOG.info("trying to load...");
         defaultTableModel = new DefaultTableModel();
         Vector rowData = null;
         Message message = null;
+        Map<Integer, Message> messages = new HashMap<>();
         int key = 0;
         for (Entry<Integer, Message> entry : messages.entrySet()) {
             key = entry.getKey();
@@ -96,6 +98,7 @@ public class ArticlesTable extends JScrollPane {
 
     private Message getMessage(int i) {
         LOG.fine("trying to get\t\t" + i);
+        Map<Integer,Message> messages = page.getMessages();
         Message m = messages.get(i);
         return m;
     }
