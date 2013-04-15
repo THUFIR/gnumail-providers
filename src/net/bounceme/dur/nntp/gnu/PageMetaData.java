@@ -63,11 +63,11 @@ public class PageMetaData {
     }
 
     public String toString() {
-        return "\n---pmd---\n" + gmd + pageStart + "\t\t" + pageEnd;
+        return "\n---pmd start---\n" + gmd + pageStart + "\t\t" + pageEnd+"\n---pmd end---\n";
     }
 
     public void next() {
         pageStart = pageStart + rowsPerPage;
-        pageEnd = pageEnd + rowsPerPage;
+        pageEnd = pageStart + rowsPerPage;
     }
 }
