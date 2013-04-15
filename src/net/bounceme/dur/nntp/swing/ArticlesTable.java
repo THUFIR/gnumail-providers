@@ -80,20 +80,22 @@ public class ArticlesTable extends JScrollPane {
 
     @SuppressWarnings("unchecked")
     private void loadDLM() throws MessagingException {
-        LOG.info("trying to load...");
+        LOG.fine("trying to load...");
         defaultTableModel = new DefaultTableModel();
+        defaultTableModel.addColumn("key");
+        defaultTableModel.addColumn("message subject");
         Vector rowData = new Vector();
         Message message = null;
         Map<Integer, Message> messages = page.getMessages();
         int key = 0;
-        LOG.info("trying to traverse..." + messages.size());
+        LOG.fine("trying to traverse..." + messages.size());
         for (Entry<Integer, Message> entry : messages.entrySet()) {
             rowData.clear();
             key = entry.getKey();
             message = messages.get(key);
             rowData.add(key);
             rowData.add(message);
-            LOG.info("why does this never log???");
+            LOG.fine("vector\t" + key + "\t" + message.getSubject());
             defaultTableModel.addRow(rowData);
         }
         jTable.setModel(defaultTableModel);
