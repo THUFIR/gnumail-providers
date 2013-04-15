@@ -63,10 +63,11 @@ public class ArticlesTable extends JScrollPane {
         int column = 1;
         Object selectedObject = jTable.getValueAt(row, column);
         @SuppressWarnings("unchecked")
-        Entry<Integer, Message> entry = (Entry<Integer, Message>) selectedObject;
+ //       Entry<Integer, Message> entry = (Entry<Integer, Message>) selectedObject;
+        Message message = (Message) selectedObject;
         LOG.fine("selected\t\t" + row);
         row = (row < 0) ? 0 : row;
-        firePropertyChange("message", null, entry);
+        firePropertyChange("message", null, message);
     }
 
     public final void nextPage() throws Exception {
