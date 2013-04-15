@@ -53,13 +53,13 @@ public enum Usenet {
         Map<Integer, Message> messages = folder.getCache(pmd);
         int key;
         Message m;
-        for (Entry<Integer, Message> entry : messages.entrySet()) {
-            key = entry.getKey();
-            m = entry.getValue();
-            LOG.info(key + m.getSubject());
-        }
+        /*    for (Entry<Integer, Message> entry : messages.entrySet()) {
+        key = entry.getKey();
+        m = entry.getValue();
+        LOG.fine(key + m.getSubject());
+        }*/
         Page page = new Page(pmd, messages);
-        LOG.severe(page.toString());
+        LOG.fine(page.toString());
         return page;
     }
 

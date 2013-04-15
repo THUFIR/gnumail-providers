@@ -31,8 +31,6 @@ public class ArticlesTable extends JScrollPane {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-
-
         defaultTableModel = new DefaultTableModel(new Object[][]{
                     {"some", "text"}, {"any", "text"}, {"even", "more"},
                     {"text", "strings"}, {"and", "other"}, {"text", "values"}},
@@ -75,7 +73,7 @@ public class ArticlesTable extends JScrollPane {
         page = usenetConnection.getPage(pageMetaData);
         LOG.fine("was the page advanced?" + page);
         loadDLM();
-        LOG.fine(page.toString());
+        LOG.info(page.toString());
     }
 
     @SuppressWarnings("unchecked")

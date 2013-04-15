@@ -95,14 +95,9 @@ public final class NNTPFolder extends Folder {
             for (int i = min; i < max; i++) {
                 try {
                     Message message = getMessageImpl(i);
-                    try {
-                        LOG.info(message.getSubject().toString());
-                    } catch (MessagingException ex) {
-                        LOG.warning("bad message" + ex);
-                    }
                     articleCache.put(i, message);
                 } catch (IOException ex) {
-                    LOG.fine("no worries\n" + ex);
+                    LOG.fine("no worries, message empty\n" + ex);
                 }
             }
         }
