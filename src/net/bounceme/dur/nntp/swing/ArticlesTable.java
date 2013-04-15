@@ -82,23 +82,30 @@ public class ArticlesTable extends JScrollPane {
     private void loadDLM() throws MessagingException {
         LOG.info("trying to load...");
         defaultTableModel = new DefaultTableModel();
-        Vector rowData = null;
+        Vector rowData = new Vector();
         Message message = null;
-        Map<Integer, Message> messages = new HashMap<>();
+        Map<Integer, Message> messages = page.getMessages();
         int key = 0;
+        LOG.info("trying to traverse..." + messages.size());
         for (Entry<Integer, Message> entry : messages.entrySet()) {
+            rowData.clear();
             key = entry.getKey();
             message = messages.get(key);
             rowData.add(key);
             rowData.add(message);
+            LOG.info("why does this never log???");
             defaultTableModel.addRow(rowData);
         }
         jTable.setModel(defaultTableModel);
+        jTable.repaint();
+        jTable.revalidate();
+        repaint();
+        revalidate();
     }
 
     private Message getMessage(int i) {
         LOG.fine("trying to get\t\t" + i);
-        Map<Integer,Message> messages = page.getMessages();
+        Map<Integer, Message> messages = page.getMessages();
         Message m = messages.get(i);
         return m;
     }
