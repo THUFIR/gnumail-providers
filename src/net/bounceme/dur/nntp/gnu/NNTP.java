@@ -8,42 +8,40 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.*;
 
-public enum Usenet {
+public enum NNTP {
 
     INSTANCE;
-    private final Logger LOG = Logger.getLogger(Usenet.class.getName());
+    private final Logger LOG = Logger.getLogger(NNTP.class.getName());
     private Properties props = new Properties();
     private NNTPRootFolder root = null;
     private Store store = null;
     private List<Folder> folders = new ArrayList<>();
     private NNTPFolder folder = null;
 
-    Usenet() {
+    NNTP() {
         LOG.fine("controller..");
         props = PropertiesReader.getProps();
-        try {
+     
             connect();
-        } catch (Exception ex) {
-            Logger.getLogger(Usenet.class.getName()).log(Level.SEVERE, "FAILED TO LOAD MESSAGES", ex);
-        }
+      
+     
     }
 
-    //hmm, is the property nntp.host correct?
-    public void connect() throws Exception {
+    public void connect() throws NoSuchProviderException   {
         LOG.fine("Usenet.connect..");
         Session session = Session.getDefaultInstance(props);
         session.setDebug(false);
         store = session.getStore(new URLName(props.getProperty("nntp.host")));
         store.connect();
         root = (NNTPRootFolder) store.getDefaultFolder();
-        LOG.fine("store is...\t" + store.toString());
-        LOG.fine("root is..\t" + root.toString());
-        LOG.fine("root size is..\t" + root.getFullName());
+        LOG.log(Level.FINE, "store is...\t{0}", store.toString());
+        LOG.log(Level.FINE, "root is..\t{0}", root.toString());
+        LOG.log(Level.FINE, "root size is..\t{0}", root.getFullName());
         LOG.fine("root.listSubscribed are..\t" + root.listSubscribed().toString());
         setFolders(Arrays.asList(root.listSubscribed()));
     }
 
-    public Page getPage(PageMetaData pmd) throws Exception {
+    public Page getPage(PageMetaData pmd)  {
         String group = pmd.getGmd().getGroup();
         LOG.fine("fetching.." + group);
         folder = (NNTPFolder) root.getFolder(group);
